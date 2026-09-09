@@ -62,7 +62,7 @@ else
 fi
 
 # 6. Force-push the single-commit branch
-git push origin "$PUBLISH_BRANCH" --force
+git push origin "$PUBLISH_BRANCH" --force || true
 
 # 7. Return to wherever you were
 git checkout "$CURRENT_BRANCH"
