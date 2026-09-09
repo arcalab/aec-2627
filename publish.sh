@@ -3,7 +3,7 @@ set -euo pipefail
 
 MAIN_BRANCH="main"
 PUBLISH_BRANCH="publish"
-FILES=("main.pdf")          # add more filenames here if needed
+FILE_LIST="publish-files.txt"
 TMP_DIR="$(mktemp -d)"
 CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
