@@ -47,6 +47,7 @@ fi
 
 # 4. Bring the files/folders in and stage them
 for f in "${FILES[@]}"; do
+  rm -rf "$f"
   mkdir -p "$(dirname "$f")"
   cp -r "$TMP_DIR/$f" "$f"
 done
@@ -67,6 +68,7 @@ git checkout "$CURRENT_BRANCH"
 
 # 8. Restore local copies for convenience (still gitignored, not tracked on main)
 for f in "${FILES[@]}"; do
+  rm -rf "$f"
   mkdir -p "$(dirname "$f")"
   cp -r "$TMP_DIR/$f" "$f"
 done
