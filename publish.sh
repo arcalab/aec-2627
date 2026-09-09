@@ -37,10 +37,7 @@ for f in "${FILES[@]}"; do
   cp -r "$f" "$TMP_DIR/$f"
 done
 
-# 3. Push main normally
-git push origin "$MAIN_BRANCH"
-
-# 4. Switch to the publish branch, creating it as an orphan the first time
+# 3. Switch to the publish branch, creating it as an orphan the first time
 if git show-ref --verify --quiet "refs/heads/$PUBLISH_BRANCH"; then
   git checkout "$PUBLISH_BRANCH"
 else
@@ -48,27 +45,27 @@ else
   git rm -rf . >/dev/null 2>&1 || true
 fi
 
-# 5. Bring the files/folders in and stage them
+# 4. Bring the files/folders in and stage them
 for f in "${FILES[@]}"; do
   mkdir -p "$(dirname "$f")"
   cp -r "$TMP_DIR/$f" "$f"
 done
 git add "${FILES[@]}"
 
-# 6. Commit — amend if a commit already exists here, otherwise create one
+# 5. Commit — amend if a commit already exists here, otherwise create one
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
   git commit --amend -m "Publish $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 else
   git commit -m "Publish $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 fi
 
-# 7. Force-push the single-commit branch
+# 6. Force-push the single-commit branch
 git push origin "$PUBLISH_BRANCH" --force
 
-# 8. Return to wherever you were
+# 7. Return to wherever you were
 git checkout "$CURRENT_BRANCH"
 
-# 9. Restore local copies for convenience (still gitignored, not tracked on main)
+# 8. Restore local copies for convenience (still gitignored, not tracked on main)
 for f in "${FILES[@]}"; do
   mkdir -p "$(dirname "$f")"
   cp -r "$TMP_DIR/$f" "$f"
