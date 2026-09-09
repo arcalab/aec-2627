@@ -40,6 +40,7 @@ done
 # 3. Switch to the publish branch, creating it as an orphan the first time
 if git show-ref --verify --quiet "refs/heads/$PUBLISH_BRANCH"; then
   git checkout "$PUBLISH_BRANCH"
+  git rm -rf . >/dev/null 2>&1 || true
 else
   git checkout --orphan "$PUBLISH_BRANCH"
   git rm -rf . >/dev/null 2>&1 || true
