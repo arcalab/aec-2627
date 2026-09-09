@@ -1,6 +1,6 @@
 # Introdução e objectivos
 
-eEsta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
+Esta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
 do ponto de vista da sua correcção e tempo de execução. Visa também tornar os
 estudantes proficientes na utilização de estruturas de dados avançadas, por
 exemplo grafos. A UC introduz ainda conceitos elementares de complexidade
