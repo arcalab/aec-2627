@@ -67,4 +67,11 @@ git push origin "$PUBLISH_BRANCH" --force
 
 # 8. Return to wherever you were
 git checkout "$CURRENT_BRANCH"
+
+# 9. Restore local copies for convenience (still gitignored, not tracked on main)
+for f in "${FILES[@]}"; do
+  mkdir -p "$(dirname "$f")"
+  cp -r "$TMP_DIR/$f" "$f"
+done
+
 rm -rf "$TMP_DIR"
