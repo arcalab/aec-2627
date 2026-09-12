@@ -47,18 +47,18 @@ O exame de recurso será no dia tba.
  
 # Testes e exames anteriores
 
-* [Exame 25-26](./exame2526.pdf)
-* [Teste 2 25-26](./teste2_2526.pdf)
-* [Teste 1 25-26](./teste1_2526.pdf)
-* [Exame 24-25](./exame2425.pdf)
-* [Teste 2 24-25](./teste2_2425.pdf)
-* [Teste 1 24-25](./teste1_2425.pdf)
-* [Exame 23-24](./exame2324.pdf)
-* [Teste 2 23-24](./teste2_2324.pdf)
-* [Teste 1 23-24](./teste1_2324.pdf)
-* [Exame 22-23](./exame2223.pdf)
-* [Teste 2 22-23](./teste2_2223.pdf)
-* [Teste 1 22-23](./teste1_2223.pdf)
+* [Exame 25-26](./pdfs/exame2526.pdf)
+* [Teste 2 25-26](./pdfs/teste2_2526.pdf)
+* [Teste 1 25-26](./pdfs/teste1_2526.pdf)
+* [Exame 24-25](./pdfs/exame2425.pdf)
+* [Teste 2 24-25](./pdfs/teste2_2425.pdf)
+* [Teste 1 24-25](./pdfs/teste1_2425.pdf)
+* [Exame 23-24](./pdfs/exame2324.pdf)
+* [Teste 2 23-24](./pdfs/teste2_2324.pdf)
+* [Teste 1 23-24](./pdfs/teste1_2324.pdf)
+* [Exame 22-23](./pdfs/exame2223.pdf)
+* [Teste 2 22-23](./pdfs/teste2_2223.pdf)
+* [Teste 1 22-23](./pdfs/teste1_2223.pdf)
 
 # Material 
 
@@ -67,10 +67,10 @@ O exame de recurso será no dia tba.
 
 ### Notas JBB
 
-* [Correcção de Algoritmos](./Correccao.pdf)
-* [Análise de Complexidade](./Complexidade.pdf)
-* [Estruturas](./Estruturas.pdf)
-* [Grafos](./Grafos.pdf)
+* [Correcção de Algoritmos](./pdfs/Correccao.pdf)
+* [Análise de Complexidade](./pdfs/Complexidade.pdf)
+* [Estruturas](./pdfs/Estruturas.pdf)
+* [Grafos](./pdfs/Grafos.pdf)
 
 # Contactos 
 
