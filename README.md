@@ -1,6 +1,6 @@
 # Introdução e objectivos
 
-eeeEsta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
+Esta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
 do ponto de vista da sua correcção e tempo de execução. Visa também tornar os
 estudantes proficientes na utilização de estruturas de dados avançadas, por
 exemplo grafos. A UC introduz ainda conceitos elementares de complexidade
@@ -19,23 +19,23 @@ caso, pior caso, e caso médio; análise amortizada; casos de estudo.
 
 
 
-# Programa // Plano 
+# Programa
 
 | Datas            | TPs                                   | Ts                                                                 |
 |------------------|---------------------------------------|--------------------------------------------------------------------|
-| 15.Set a 19.Set  |                                       | Apresentação. Introdução à correcção de Programas Imperativos. Especificações e triplos de Hoare |
-| 22.Set a 25.Set  |             | Validade de um Triplo de Hoare. Regras de prova: Sequencia, atribuição e condicionais |
-| 29.Set a 3.Out   |                  | Correcção de ciclos: variantes e invariantes.                      |
-| 6.Out a 10.Out   |                | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
-| 13.Out a 17.Out  |                   | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
-| 20.Out a 24.Out  |               | Análise amortizada                                                 |
-| 27.Out a 30.Out  |  | Estruturas de dados para representar dicionarios: tabelas de Hash  |
-| 3.Nov a 7.Nov    |                  | Árvores AVL: motivação e algoritmo de inserção balanceada           |
-| 10.Nov a 14.Nov  |                               | Revisões                                                           |
-| 17.Nov a 21.Nov  |                      | Grafos: representações e funções de consulta                       |
-| 24.Nov a 28.Nov  |   | Grafos: travessias                                                 |
-| 1.Dez a 5.Dez    |       | Grafos pesados: algoritmo de Dijkstra, Prim e Floyd Warshal        |
-| 8.Dez a 12.Dez   |    |                                                                    |
+| 14.Set a 18.Set  |                                       | Apresentação. Introdução à correcção de Programas Imperativos. Especificações e triplos de Hoare |
+| 21.Set a 24.Set  |             | Validade de um Triplo de Hoare. Regras de prova: Sequência, atribuição e condicionais |
+| 28.Set a 2.Out   |                  | Correcção de ciclos: variantes e invariantes.                      |
+| 05.Out a 09.Out   |                | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
+| 12.Out a 16.Out  |                   | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
+| 19.Out a 23.Out  |               | Análise amortizada                                                 |
+| 26.Out a 29.Out  |               | Revisões |
+| 02.Nov a 06.Nov  |  | Estruturas de dados para representar dicionários: tabelas de Hash  |
+| 09.Nov a 13.Nov    |                  | Árvores AVL: motivação e algoritmo de inserção balanceada           |
+| 16.Nov a 20.Nov  |                      | Grafos: representações e funções de consulta                       |
+| 23.Nov a 27.Nov  |   | Grafos: travessias                                                 |
+| 30.Dez a 04.Dez    |       | Grafos pesados: algoritmo de Dijkstra, Prim e Floyd Warshal        |
+| 8.Dez a 12.Dez   |    | Revisões                                                                   |
 
 # Avaliação
 
@@ -47,6 +47,9 @@ O exame de recurso será no dia tba.
  
 # Testes e exames anteriores
 
+* [Exame 25-26](./exame2526.pdf)
+* [Teste 2 25-26](./teste2_2526.pdf)
+* [Teste 1 25-26](./teste1_2526.pdf)
 * [Exame 24-25](./exame2425.pdf)
 * [Teste 2 24-25](./teste2_2425.pdf)
 * [Teste 1 24-25](./teste1_2425.pdf)
@@ -73,9 +76,10 @@ O exame de recurso será no dia tba.
 
   | Docente         | Horário Atendimento |
   | ----------      |------------ |
-  | [José Bernardo Barros](mailto:jbb@di.uminho.pt)  | 3a-f tarde |
-  | [Renato Neves](mailto:nevrenato@di.uminho.pt)    | 3a-f tarde |
+  | [José Bernardo Barros](mailto:jbb@di.uminho.pt)  | 3a-f tarde (enviar e-mail antes) |
+  | [Renato Neves](mailto:nevrenato@di.uminho.pt)    | 3a-f tarde (enviar e-mail antes) |
   | [Jorge Sousa Pinto](mailto:jsp@di.uminho.pt)     | 6a-f, 9h00-11h00 |
+  | [Alcino Cunha](mailto:alcino@di.uminho.pt)  | ... |
 
 
 
