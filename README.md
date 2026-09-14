@@ -79,7 +79,7 @@ O exame de recurso será no dia tba.
   | [José Bernardo Barros](mailto:jbb@di.uminho.pt)  | 3a-f tarde (enviar e-mail antes) |
   | [Renato Neves](mailto:nevrenato@di.uminho.pt)    | 3a-f tarde (enviar e-mail antes) |
   | [Jorge Sousa Pinto](mailto:jsp@di.uminho.pt)     | 6a-f, 9h00-11h00 |
-  | [Alcino Cunha](mailto:alcino@di.uminho.pt)  | ... |
+  | [Alcino Cunha](mailto:alcino@di.uminho.pt)  | 4a-f tarde (enviar e-mail antes) |
 
 
 
