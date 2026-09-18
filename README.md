@@ -24,9 +24,9 @@ caso, pior caso, e caso médio; análise amortizada; casos de estudo.
 | Datas            | TPs                                   | Ts                                                                 |
 |------------------|---------------------------------------|--------------------------------------------------------------------|
 | 14.Set a 18.Set  |                                        | Apresentação. Introdução à correcção de Programas Imperativos. Especificações e triplos de Hoare |
-| 21.Set a 24.Set  | [Ficha 1](./pdfs/ficha1tp.pdf) (Especificação)           | Validade de um Triplo de Hoare. Regras de prova: Sequência, atribuição e condicionais |
-| 28.Set a 2.Out   |                   | Correcção de ciclos: variantes e invariantes.                      |
-| 05.Out a 09.Out   |                | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
+| 21.Set a 24.Set  | [Ficha 1 (Especificações)](./pdfs/ficha1tp.pdf)          | Validade de um Triplo de Hoare. Regras de prova: Sequência, atribuição e condicionais |
+| 28.Set a 2.Out   |  [Ficha 1 (Correcção)](./pdfs/ficha1tp.pdf)                  | Correcção de ciclos: variantes e invariantes.                      |
+| 05.Out a 09.Out   |  [Ficha 1 ((In)variantes)](./pdfs/ficha1tp.pdf)               | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
 | 12.Out a 16.Out  |                   | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
 | 19.Out a 23.Out  |               | Análise amortizada                                                 |
 | 26.Out a 29.Out  |               | Revisões |
