@@ -37,7 +37,7 @@
 \usepackage{mathrsfs}  
 \usepackage{relsize}
 \usepackage[all]{xy}
-\usetikzlibrary{tikzmark,arrows.meta,calc}
+\usetikzlibrary{tikzmark,arrows.meta,calc,positioning}
 
 \AtBeginSection[]
 {
@@ -69,7 +69,7 @@
 
 \begin{document}
 
-\title{Hoare Logic}
+\title{Hoare Logic (summary)}
 \frame[plain]{\titlepage}
 
 \begin{frame}[plain]
@@ -122,14 +122,15 @@
                       \{ \text{ ``altitude is (mostly) safe'' } \}$
                 \item $\{ \text{ ``list is valid and x is in the list'' } \} 
                         \, \mathbf{QuantumFind} \, 
-                      \{ \text{ ``(frequently) true'' } \}$
+                      \{ \text{ ``= true (frequently)'' } \}$
         \end{itemize}
         \end{mexamples}
         %
         \pause
         \vfill
         \begin{center}
-                \fbox{But how to describe such properties \salert{rigorously} ?}
+                \fbox{But how to describe such properties
+                \salert{rigorously} ?}
         \end{center}
 \end{frame}
 
@@ -139,7 +140,7 @@
                 \item ``Ninguém para o Braga''
                 \item ``O Salazar sentou-se na cadeira e partiu a perna''
                 \item ``Brexit does mean Brexit''
-                \item ``Don't worry -- this plane is mostly safe !''
+                \item ``Don't worry -- this plane is mostly safe''
         \end{itemize}
 \end{frame}
 
@@ -155,22 +156,25 @@
 \end{frame}
 
 
-\begin{frame}{The basic ingredients}
+\begin{frame}{Basic ingredients}
 
-        Typed variables (\ie\ placeholders) $x : \typeA$
+        \begin{itemize}
+                \item Variables (\ie\ placeholders) $x : \typeA$
 
-        Typed operations (\eg\ addition) $f : \typeA_1, \dots, \typeA_n \to \typeA$
+                \item Operations (\eg\ addition) $f : \typeA_1, \dots, \typeA_n \to \typeA$
 
-        Predicates (\eg\ equality) $p : \typeA_1, \dots, \typeA_n$
+                \item Predicates (\eg\ equality) $p : \typeA_1, \dots, \typeA_n$
 
-        Boolean connectives $\wedge, \Rightarrow, \neg$
+                \item Connectives $\wedge, \Rightarrow, \neg$
 
-        \salert{Quantifiers} $\forall x : \typeA. \, \dots, \exists x : \typeA. \, \dots$
-
+                \item Quantifiers $\forall x : \typeA. \, \Phi(x), 
+                        \, \exists x : \typeA. \, \Phi(x)$
+        \end{itemize}
         \pause
-        \vspace{0.5cm}
-        \dots\ plus a set of rules that underlie human reasoning and advanced
-        PLs -- and which hopefully you will see in later courses ;-)
+        \vspace{0.2cm}
+        \dots\ plus a set of rules that underlie \salert{human reasoning} and
+        \salert{advanced PLs} -- and which hopefully you will see in later
+        courses ;-)
 \end{frame}
 
 \begin{frame}{From natural language to FOL}
@@ -189,18 +193,111 @@
         \end{enumerate}
 \end{frame}
 
-\begin{frame}{A word of warning -- specifications vs implementations}
+\begin{frame}{A word of Warning -- Specifications vs. Implementations}
 
-        FOL is a logic for reasoning about \, \dots \, properties
+        FOL is a logic for reasoning about  \dots\  properties
         (\salert{specifications})
 
-        A programming language is a language for \, \dots \, programming
+        A programming language is a language for \dots\  programming
         (\salert{implementations})
 
-        Don't try to program in FOL neither to specify in \texttt{C}
+        Don't try to program in FOL nor to specify in \texttt{C}
+
+\end{frame}
+
+\section{Proving that our plane won't crash}
+
+\begin{frame}{In a nutshell \dots}
+
+        Focus is on deriving the \salert{weakest} condition $\Phi$ such that
+        \[
+                \{ \Phi \} \> P \> \{ \Psi \}
+        \]
 
         \pause
-        \vfill
-        Let's go the exercise sheet !!
+        \bigskip
+        \bigskip
+        \begin{minipage}[0.3\textheight]{\textwidth}
+                \begin{columns}[c]
+                \begin{column}{0.7\textwidth}
+                        To \salert{understand} a program amounts to knowing the weakest
+                        precondition that ensures a given postcondition
+                \end{column}
+                \begin{column}{0.20\textwidth}
+                        \includegraphics[scale=1.1]{images/Dijkstra.jpg}
+                \end{column}
+                \end{columns}
+       \end{minipage}
 \end{frame}
+
+
+\begin{frame}{In a nutshell \dots}
+
+        \begin{center}
+                {\dots\ also Follow the \salert{Rules} !}
+        \end{center}
+\end{frame}
+
+\begin{frame}{The rule pattern}
+
+        \[
+                \infer{
+                        \text{conclusion}
+                }{
+                        \text{condition}_1 
+                        \quad \dots \quad
+                        \text{condition}_n
+                }
+        \]
+\end{frame}
+
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\begin{frame}{The rules}
+        \[
+                \infer{\{ \Phi \} \> \prog{skip} \> \{ \Phi \} }{}
+                \hspace{3cm}
+                \infer{\{ \Phi[\prog{e}/\prog{x}] \} \> \prog{ x : = e } \>
+                \{ \Phi \} }{}
+        \]
+        \\[1pt]
+        \[
+                \infer { \{ \Phi \} \> \prog{p \> \blue{ ;} \> q} \> \{ \Xi \} }{
+                        \{ \Phi \} \> \prog{p} \> \{ \Psi \}
+                        \qquad
+                        \{ \Psi \} \> \prog{q} \> \{ \Xi \}
+                }
+                \hspace{3cm}
+                \infer{
+                        \{ \Phi \} \> \prog{\blue{while}} \> \prog{b} \>
+                        \prog{p} \> 
+                        \{ \neg \prog{b} \wedge \Phi \}
+                }{
+                        \{ \Phi \wedge \prog{b} \} \> \prog{p} \> \{ \Phi \}
+                }
+        \]
+        \\[1pt]
+        \[
+                \infer {
+                        \{ \Phi \} \> \prog{\blue{if} \> b}
+                        \> \prog{\blue{then}} \>
+                        \prog{p} \> \prog{\blue{else}} \> \prog{q}
+                        \> \{ \Psi \}
+                }{
+                        \{ \prog{b} \wedge \Phi \} \> \prog{p} \> \{ \Psi \}
+                        \qquad
+                        \{ \prog{\neg b} \wedge \Phi \} \> \prog{q} \> \{ \Psi \}
+                }
+        \]
+        \\[1pt]
+        \[
+                \infer{ \{ \Phi \} \> \prog{p} \> \{ \Psi \} }{
+                        \vdash \Phi \rightarrow \Psi
+                        \quad
+                        \{ \Psi \} \> \prog{p} \> \{ \Xi \}
+                        \quad
+                        \vdash \Xi \rightarrow \Omega
+                }
+        \]
+\end{frame}
+
 \end{document}
