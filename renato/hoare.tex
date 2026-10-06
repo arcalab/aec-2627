@@ -66,23 +66,30 @@
 \newenvironment{mexamples}
   {\begin{exampleblock}{Examples}}
   {\end{exampleblock}}
+\newenvironment{exercise}
+  {\begin{exampleblock}{Exercise}}
+  {\end{exampleblock}}
+
 
 \begin{document}
 
-\title{Hoare Logic (summary)}
+\title{Hoare Logic}
 \frame[plain]{\titlepage}
 
 \begin{frame}[plain]
 
-        \begin{textblock*}{5cm}(11cm,1.5cm)
+        \begin{textblock*}{5cm}(6cm,1.5cm)
             \includegraphics[scale=0.03]{images/hoare.jpg}\hspace*{.85cm}~%
         \end{textblock*}
-
+        %%
         \vspace{5cm}
-        \large{
-                \dots \, or \dots \, the \salert{science} of knowing whether
-                \salert{bugs} will make my plane \salert{crash}
-        }
+        %%
+        \begin{center}
+                \large{
+                        \dots \, the \salert{science} of knowing whether
+                        \salert{bugs} will make my plane \salert{crash}
+                }
+        \end{center}
 \end{frame}
 
 \begin{frame}{The protagonist}
@@ -90,20 +97,27 @@
             \Large
             \tikzmarknode{hoare}{  \{ \Phi \} \, P \, \{ \Psi \}  }
         \]
-
+        %%
         \begin{tikzpicture}[remember picture,overlay]
                 \draw[<-,thick,red] (hoare.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
                         -- ++(0.0,-0.25)
                         node[below]{\footnotesize Hoare triple};
         \end{tikzpicture}
-
-
-         \pause
-         \vfill
-         \begin{center}
-                notation for ``input has \salert{property} $\Phi$
-                $\Longrightarrow$ output has \salert{property} $\Psi$"
+        %%
+        \vspace{1cm}
+        \begin{center}
+                notation for
+                \emph{
+                        ``input has \salert{property} $\Phi$
+                        $\Longrightarrow$ output has \salert{property} $\Psi$"
+                }
          \end{center}
+\end{frame}
+
+\begin{frame}{This module}
+        %%
+        \dots \, about \salert{proving} the \salert{validity} of Hoare triples
+        %%
 \end{frame}
 
 \begin{frame}{A fistful of Hoare triples}
@@ -127,10 +141,10 @@
         \end{mexamples}
         %
         \pause
-        \vfill
+        \vspace{0.5cm}
         \begin{center}
                 \fbox{But how to describe such properties
-                \salert{rigorously} ?}
+                \salert{rigorously}?}
         \end{center}
 \end{frame}
 
@@ -153,59 +167,162 @@
         Deceptively simple
 
         Powerful enough to handle a large portion of \salert{mathematics}
+
+        \dots \, and to show we will never be \salert{complete} :-(
+
+        \begin{textblock*}{5cm}(12cm,1.7cm)
+                \includegraphics[scale=0.2]{images/godel.png}\hspace*{.85cm}~%
+        \end{textblock*}
 \end{frame}
 
 
-\begin{frame}{Basic ingredients}
+\begin{frame}{FOL -- a sketch}
 
-        \begin{itemize}
-                \item Variables (\ie\ placeholders) $x : \typeA$
+        \begin{block}{Terms}
+                $t ::= x \mid \tikzmarknode{ops}{f} \, (t,\dots,t)$
+        \end{block}
 
-                \item Operations (\eg\ addition) $f : \typeA_1, \dots, \typeA_n \to \typeA$
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (ops.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.25)
+                        node[below]{\footnotesize basic operations, \eg\ addition};
+        \end{tikzpicture}
+        
 
-                \item Predicates (\eg\ equality) $p : \typeA_1, \dots, \typeA_n$
-
-                \item Connectives $\wedge, \Rightarrow, \neg$
-
-                \item Quantifiers $\forall x : \typeA. \, \Phi(x), 
-                        \, \exists x : \typeA. \, \Phi(x)$
-        \end{itemize}
-        \pause
         \vspace{0.2cm}
+        \begin{block}{Formulae}
+                $\phi ::= \tikzmarknode{preds}{p} \, (t,\dots, t) \mid \phi \wedge \phi
+                \mid \phi \Rightarrow \phi \mid \neg \phi \mid \mathtt{ff}
+                \mid \forall x. \, \phi \mid \exists x. \, \phi$
+        \end{block}
+        %%
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (preds.north)+(0.0,0.1)  -- ++(0.0,0.3)
+                        -- ++(5.0,0.0) -- ++(0.0,0.6)
+                        node[above]{\footnotesize basic predicates, \eg\ $=$, $\leq$};
+        \end{tikzpicture}
+        %
+
+        \pause
         \dots\ plus a set of rules that underlie \salert{human reasoning} and
-        \salert{advanced PLs} -- and which hopefully you will see in later
+        \salert{advanced PLs} -- and which (hopefully) you will see in later
         courses ;-)
 \end{frame}
 
-\begin{frame}{From natural language to FOL}
-        Let's translate the following sentences to FOL (\ie\ first-order logic)
+\begin{frame}{Dusting off your old FOL notebook}
+
+        \begin{exercise}
+                Translate the following sentences to FOL
+                \begin{enumerate}
+                        \item $m$ is an upper bound of $x$ and $y$
+                        \item $m$ is the maximum of $x$ and $y$
+                        \item all natural numbers are either odd or even
+                        \item there exists no real number that is equal
+                                to the square root of $-1$
+                        \item $i$ is the largest number for which predicate $\phi$
+                                holds
+                        \item every nat. nº $> 2$ is equal to the sum
+                                of two prime nºs  (\salert{Golbach's conjecture})
+                \end{enumerate}
+        \end{exercise}
+\end{frame}
+
+\begin{frame}{Back to programming -- my first Specification}
+        \[
+                \big \{ 
+                        \mathbf{x} = \tikzmarknode{initx}{x_0} 
+                        \wedge 
+                        \mathbf{y} = \tikzmarknode{inity}{y_0} 
+                \big \}
+                \quad 
+                \tikzmarknode{swap}{\mathbf{swap(x,y)}}
+                \quad
+                \big \{ 
+                        \tikzmarknode{endx}{\mathbf{x}} = y_0 
+                        \wedge \tikzmarknode{endy}{\mathbf{y}} 
+                        = x_0 
+                \big \}
+        \]
+
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (initx.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.25)
+                        node[below]{\footnotesize initial value of $x$};
+        \end{tikzpicture}
         %
-        \begin{enumerate}
-                \item $m$ is an upper bound of $x$ and $y$
-                \item $m$ is the maximum of $x$ and $y$
-                \item all natural numbers are either odd or even
-                \item there exists no real number that is equal
-                        to the square root of $-1$
-                \item $i$ is the largest number for which predicate $\phi : \Nats$
-                        holds
-                \item every nat. nº greater than $2$ is the sum
-                        of two prime nºs  (\salert{Golbach's conjecture})
-        \end{enumerate}
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (swap.north)+(0.0,0.2)  -- ++(0.0,0.5)
+                        -- ++(0.0,0.25)
+                        node[above]{\footnotesize implementation};
+        \end{tikzpicture}
+        %
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (inity.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.8)
+                        node[below]{\footnotesize initial value of $y$};
+        \end{tikzpicture}
+        %
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (endx.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.9)
+                        node[below]{\footnotesize updated value of $x$};
+        \end{tikzpicture}
+        %
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (endy.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.25)
+                        node[below]{\footnotesize updated value of $y$};
+        \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{A word of Warning -- Specifications vs. Implementations}
+\begin{frame}{Back to programming -- my second Specification}
+        \[
+                \Big \{ 
+                        \tikzmarknode{valid}{\mathbf{N} \geq 0}
+                \Big \}
+                \quad 
+                \mathbf{QSort(v[\, ], N)}
+                \quad
+                \Big \{ 
+                        \tikzmarknode{trav}{\forall} \, 0 \leq i < \mathbf{N} - 1. \>
+                        \tikzmarknode{ordered}{
+                        \mathbf{v}[\, i \, ] \leq \mathbf{v}[\, i+1 \,]
+                        }
+                \Big \}
+        \]
 
-        FOL is a logic for reasoning about  \dots\  properties
-        (\salert{specifications})
-
-        A programming language is a language for \dots\  programming
-        (\salert{implementations})
-
-        Don't try to program in FOL nor to specify in \texttt{C}
-
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (valid.south)+(0.0,-0.2)  -- ++(0.0,-0.5)
+                        -- ++(0.0,-0.25)
+                        node[below]{\footnotesize list is valid};
+        \end{tikzpicture}
+        %
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (trav.north)+(0.0,0.2)  -- ++(0.0,0.6)
+                        -- ++(1.0,0) -- ++(0.0,0.3)
+                        node[above]{\footnotesize in some sense $\forall$ allows to traverse
+                        the list};
+        \end{tikzpicture}
+        %
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (ordered.south)+(-2.0,-0.2)  -- ++(-2.0,-0.5)
+                        -- ++(0.0,-0.25)
+                        node[below]{\footnotesize list is ordered};
+        \end{tikzpicture}
 \end{frame}
 
-\section{Proving that our plane won't crash}
+\begin{frame}{A word of warning -- Specifications vs. Implementations}
+
+        FOL is a \salert{logic} and not a \salert{programming language}
+
+        Do not try to program in FOL :-) 
+
+        \pause
+        \vspace{1cm}
+        Spoiler alert: in later courses this boundary will actually become fuzzier
+\end{frame}
+
+\section{Hoare logic -- or for the pragmatist \dots \, proving that our plane won't crash}
 
 \begin{frame}{In a nutshell \dots}
 
@@ -216,15 +333,14 @@
 
         \pause
         \bigskip
-        \bigskip
-        \begin{minipage}[0.3\textheight]{\textwidth}
+        \begin{minipage}[0.1\textheight]{\textwidth}
                 \begin{columns}[c]
                 \begin{column}{0.7\textwidth}
                         To \salert{understand} a program amounts to knowing the weakest
                         precondition that ensures a given postcondition
                 \end{column}
-                \begin{column}{0.20\textwidth}
-                        \includegraphics[scale=1.1]{images/Dijkstra.jpg}
+                \begin{column}{0.23\textwidth}
+                        \qquad \includegraphics[scale=1.2]{images/Dijkstra.jpg}
                 \end{column}
                 \end{columns}
        \end{minipage}
@@ -234,7 +350,7 @@
 \begin{frame}{In a nutshell \dots}
 
         \begin{center}
-                {\dots\ also Follow the \salert{Rules} !}
+                {\dots\ also please follow the \salert{rules}}
         \end{center}
 \end{frame}
 
@@ -249,6 +365,12 @@
                         \text{condition}_n
                 }
         \]
+
+        \pause
+        \vspace{1cm}
+        A rule for each program construct
+
+        + a logical rule for changing pre- and post-conditions
 \end{frame}
 
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
@@ -290,12 +412,12 @@
         \]
         \\[1pt]
         \[
-                \infer{ \{ \Phi \} \> \prog{p} \> \{ \Psi \} }{
-                        \vdash \Phi \rightarrow \Psi
+                \infer{ \{ \Phi \} \> \prog{p} \> \{ \Omega \} }{
+                         \Phi \rightarrow \Psi
                         \quad
                         \{ \Psi \} \> \prog{p} \> \{ \Xi \}
                         \quad
-                        \vdash \Xi \rightarrow \Omega
+                        \Xi \rightarrow \Omega
                 }
         \]
 \end{frame}
