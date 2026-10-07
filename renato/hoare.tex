@@ -37,12 +37,29 @@
 \usepackage{mathrsfs}  
 \usepackage{relsize}
 \usepackage[all]{xy}
-\usetikzlibrary{tikzmark,arrows.meta,calc,positioning}
+\usetikzlibrary{tikzmark,arrows.meta,calc,positioning,shapes.geometric,decorations.markings}
 \tikzset{
-  prog/.style={draw, rounded corners=2pt, minimum width=1.4cm, minimum height=0.9cm},
-  wire/.style={-{Stealth[length=2mm]}}
+  prog/.style={draw, rounded corners=2pt, minimum width=1cm, minimum height=0.9cm},
+  wire/.style={-{Stealth[length=2mm]}},
+  lbl/.style={above, inner sep=2pt, font=\small, yshift=5pt},
+  frontier/.style={dashed, thick, gray, dash pattern=on 4pt off 3pt},
+  cond/.style={draw, diamond, aspect=1, inner sep=1pt, minimum height=0.5cm},
+  ctrlwire/.style={wire, densely dotted},   % control wire, visually distinct
+  midarrow/.style={
+    decoration={markings, mark=at position 0.5 with {\arrow{Stealth[length=1.8mm]}}},
+    postaction={decorate}
+  }
 }
-
+% \cond[opts]{name}{label}   ports: name-in, name-up, name-down
+\newcommand{\cond}[3][]{%
+  \node[cond, #1] (#2) {#3};
+  \coordinate (#2-in)   at (#2.west);
+  \coordinate (#2-fork) at ($(#2.east)+(0.5,0)$);
+  \coordinate (#2-up)   at ($(#2.east)+(1.0,0.8)$);
+  \coordinate (#2-down) at ($(#2.east)+(1.0,-0.8)$);
+  \draw[wire, -] (#2.east) -- (#2-fork) |- (#2-up);
+  \draw[wire, -] (#2-fork) |- (#2-down);
+}
 \AtBeginSection[]
 {
     \begin{frame}
@@ -479,13 +496,16 @@
                 \]
         \end{column}
         \begin{column}{0.5\textwidth}
+                \hspace{1.5cm}
                 %
                 \begin{tikzpicture}
-                  \node[prog] (f) {$f$};
-                  \node[prog, right=1.5cm of f] (g) {$g$};
-                  \draw[wire] (f.east) -- (g.west);
-                  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
-                  \draw[wire] (g.east) -- ++(1cm,0);
+                     \coordinate (a) at (0,0);
+                     \coordinate (b) at (2,0);
+                     \draw[wire] (a) -- node[lbl, xshift=-15pt] {$\Phi$} (b);
+                     \draw[wire] (a) -- node[lbl, xshift=15pt] {$\Phi$} (b);
+                % frontier between f and g
+                     \coordinate (mid) at ($(a.east)!0.5!(b.west)$);
+                     \draw[frontier] ([yshift=1cm]mid) -- ([yshift=-1cm]mid);
                 \end{tikzpicture}
         \end{column}
       \end{columns}
@@ -494,33 +514,108 @@
 \end{frame}
 
 \begin{frame}{Sequential composition}
-\begin{tikzpicture}
-  \node[prog] (f) {$f$};
-  \node[prog, right=1.5cm of f] (g) {$g$};
-  \draw[wire] (f.east) -- (g.west);
-  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
-  \draw[wire] (g.east) -- ++(1cm,0);
-\end{tikzpicture}
-\end{frame}
+%
+   \begin{minipage}[0.1\textheight]{\textwidth}
+%
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                \[
+                \infer { \{ \Phi \} \> \prog{p \> \blue{ ;} \> q} \> \{ \Xi \} }{
+                        \{ \Phi \} \> \prog{p} \> \{ \Psi \}
+                        \qquad
+                        \{ \Psi \} \> \prog{q} \> \{ \Xi \}
+                }
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+                \hspace{1cm}
+                %
+                \begin{tikzpicture}
+                  \node[prog] (p) {$\mathtt{p}$};
+                  \node[prog, right=2cm of p] (q) {$\mathtt{q}$};
+                
+                  % input and output wires
+                  \draw[wire] ([xshift=-1cm]p.west) -- node[lbl] {$\Phi$} (p.west);
+                  \draw[wire] (q.east) -- node[lbl] {$\Xi$} ++(1cm,0);
+                
+                  % p ; q, with the label on both sides of the frontier
+                  \draw[wire] (p.east) -- 
+                      node[lbl, pos=0.3] {$\Psi$}
+                      node[lbl, pos=0.7] {$\Psi$} (q.west);
+                
+                  % frontier between p and q
+                  \coordinate (mid) at ($(p.east)!0.5!(q.west)$);
+                  \draw[frontier] ([yshift=1cm]mid) -- ([yshift=-1cm]mid);
+                \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
+%
+\end{frame} 
 
 \begin{frame}{Conditional}
-\begin{tikzpicture}
-  \node[prog] (f) {$f$};
-  \node[prog, right=1.5cm of f] (g) {$g$};
-  \draw[wire] (f.east) -- (g.west);
-  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
-  \draw[wire] (g.east) -- ++(1cm,0);
-\end{tikzpicture}
-\end{frame}
+    \begin{minipage}[0.1\textheight]{\textwidth}
+%
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                \[
+                        \infer {
+                        \{ \Phi \} \> \prog{\blue{if} \> b}
+                        \> \prog{\blue{then}} \>
+                        \prog{p} \> \prog{\blue{else}} \> \prog{q}
+                        \> \{ \Psi \}
+                }{
+                        \{ \prog{b} \wedge \Phi \} \> \prog{p} \> \{ \Psi \}
+                        \qquad
+                        \{ \prog{\neg b} \wedge \Phi \} \> \prog{q} \> \{ \Psi \}
+                }
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+                \begin{tikzpicture}
+                  \cond{c}{$? \mathtt{b}$}
+                  \node[prog, anchor=west] (g) at ($(c-up)+(0.5,0)$)   {$\mathtt{p}$};
+                  \node[prog, anchor=west] (h) at ($(c-down)+(0.5,0)$) {$\mathtt{q}$};
+                
+                  \draw[wire] ([xshift=-1cm]c-in) -- node[lbl] {$\Phi$} (c-in);
+                  \draw[wire] (c-up)   -- node[lbl, xshift=-10pt] {$\Phi \wedge \mathtt{b}$} (g.west);
+                  \draw[wire] (c-down) -- node[lbl, xshift=-14pt, yshift=-20pt]
+                                          {$\Phi \wedge \neg \mathtt{b}$} (h.west);
+                
+                  % merge: mirror image of the fork
+                  \coordinate (m) at ($(g.east |- c.east)+(1,0)$);
+                  \draw[wire, -, midarrow] (g.east) -| node[lbl, xshift=-10pt] {$\Psi$}(m);
+                  \draw[wire, -, midarrow] (h.east) -| node[lbl, xshift=-10pt, yshift=-20pt] {$\Psi$}(m);
+                  \draw[wire] (m) -- node[lbl] {$\Psi$}  ++(1cm,0);
+                \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
 
-\begin{frame}{While-loop}
-\begin{tikzpicture}
-  \node[prog] (f) {$f$};
-  \node[prog, right=1.5cm of f] (g) {$g$};
-  \draw[wire] (f.east) -- (g.west);
-  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
-  \draw[wire] (g.east) -- ++(1cm,0);
-\end{tikzpicture}
 \end{frame}
+%
+%\begin{frame}{While-loop}
+%\begin{tikzpicture}
+%  \node[prog, minimum height=1cm] (f) {$f$};
+%  \cond[right=1.2cm of f]{c}
+%  \node[prog, anchor=west] (g) at ($(c-up)+(0.5,0)$)   {$g$};
+%  \node[prog, anchor=west] (h) at ($(c-down)+(0.5,0)$) {$h$};
+%
+%  % inputs of f: external on top, feedback below
+%  \draw[wire] ([xshift=-1cm,yshift=0.25cm]f.west) -- node[lbl] {$\Phi$} ([yshift=0.25cm]f.west);
+%
+%  \draw[wire] (f.east) -- node[lbl] {$A$} (c-in);
+%  \draw[wire] (c-up)   -- (g.west);
+%  \draw[wire] (c-down) -- (h.west);
+%  \draw[wire] (g.east) -- ++(1cm,0);
+%  \draw[ctrlwire] ($(c-ctrl)+(0,1cm)$) -- node[right] {$b$} (c-ctrl);
+%
+%  % feedback: h's output loops under the diagram back into f
+%  \coordinate (fbstart) at ($(h.east)+(0.6,0)$);
+%  \coordinate (fbbot)   at ($(h.south)+(0,-0.6)$);
+%  \coordinate (fbend)   at ($(f.west)+(-0.5,-0.25)$);
+%  \draw[wire] (h.east) -- (fbstart) |- (fbbot) -| (fbend) -- ([yshift=-0.25cm]f.west);
+%\end{tikzpicture}
+%\end{frame}
 
 \end{document}
