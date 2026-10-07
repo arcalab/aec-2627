@@ -39,10 +39,18 @@
 \usepackage[all]{xy}
 \usetikzlibrary{tikzmark,arrows.meta,calc,positioning,shapes.geometric,decorations.markings}
 \tikzset{
-  prog/.style={draw, rounded corners=2pt, minimum width=1cm, minimum height=0.9cm},
+prog/.style={
+    draw=blue!50!black,
+    fill=blue!8,
+    thick,
+    rounded corners=3pt,
+    minimum width=1.2cm,
+    minimum height=0.9cm,
+    inner sep=4pt,
+  },
   wire/.style={-{Stealth[length=2mm]}},
   lbl/.style={above, inner sep=2pt, font=\small, yshift=5pt},
-  frontier/.style={dashed, thick, gray, dash pattern=on 4pt off 3pt},
+  frontier/.style={dashed, thick, red, dash pattern=on 4pt off 3pt},
   cond/.style={draw, diamond, aspect=1, inner sep=1pt, minimum height=0.5cm},
   ctrlwire/.style={wire, densely dotted},   % control wire, visually distinct
   midarrow/.style={
@@ -400,7 +408,7 @@
 
         Developing a correctness proof $\Rightarrow$ making a \salert{tree grow}
         
-        \vspace{0.5cm}
+        \vspace{0.8cm}
         \[
                 \infer{
                         \tikzmarknode{concl}{\text{conclusion}}
@@ -417,7 +425,7 @@
                                 \infer{
                                 \text{assumption}
                                 }{
-                                        \checkmark
+                                        \tikzmarknode{leaf}{\checkmark}
                                 }
                         }
                         \quad \cdots \quad
@@ -431,6 +439,12 @@
                 \draw[<-,thick,red] (concl.south)+(0.0,-0.2)  -- ++(0.0,-0.2)
                         -- ++(0.0,-0.3)
                         node[below]{\footnotesize the goal/root};
+        \end{tikzpicture}
+
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (leaf.north)+(0.0,0.2)  -- ++(0.0,0.6)
+                        -- ++(0.5,0.0) -- ++(0.0,0.0)
+                        node[right]{\footnotesize leaf -- all work done in this branch};
         \end{tikzpicture}
 
 \end{frame}
@@ -578,8 +592,8 @@
                   \node[prog, anchor=west] (h) at ($(c-down)+(0.5,0)$) {$\mathtt{q}$};
                 
                   \draw[wire] ([xshift=-1cm]c-in) -- node[lbl] {$\Phi$} (c-in);
-                  \draw[wire] (c-up)   -- node[lbl, xshift=-10pt] {$\Phi \wedge \mathtt{b}$} (g.west);
-                  \draw[wire] (c-down) -- node[lbl, xshift=-14pt, yshift=-20pt]
+                  \draw[wire] (c-up)   -- node[lbl, xshift=-25pt] {$\Phi \wedge \mathtt{b}$} (g.west);
+                  \draw[wire] (c-down) -- node[lbl, xshift=-25pt, yshift=-20pt]
                                           {$\Phi \wedge \neg \mathtt{b}$} (h.west);
                 
                   % merge: mirror image of the fork
@@ -587,35 +601,63 @@
                   \draw[wire, -, midarrow] (g.east) -| node[lbl, xshift=-10pt] {$\Psi$}(m);
                   \draw[wire, -, midarrow] (h.east) -| node[lbl, xshift=-10pt, yshift=-20pt] {$\Psi$}(m);
                   \draw[wire] (m) -- node[lbl] {$\Psi$}  ++(1cm,0);
+                  % frontier at the fork
+                  \draw[frontier] ([yshift=2cm,xshift=0.6cm]c-fork) 
+                            -- ([yshift=-2cm,xshift=0.6cm]c-fork);
+                  % frontier at the merge
+                  \draw[frontier] ([yshift=2cm,xshift=-0.7cm]m) -- ([yshift=-2cm,xshift=-0.7cm]m);
                 \end{tikzpicture}
         \end{column}
       \end{columns}
    \end{minipage}
 
 \end{frame}
+
+\begin{frame}{Conditional}
+    \begin{minipage}[0.1\textheight]{\textwidth}
 %
-%\begin{frame}{While-loop}
-%\begin{tikzpicture}
-%  \node[prog, minimum height=1cm] (f) {$f$};
-%  \cond[right=1.2cm of f]{c}
-%  \node[prog, anchor=west] (g) at ($(c-up)+(0.5,0)$)   {$g$};
-%  \node[prog, anchor=west] (h) at ($(c-down)+(0.5,0)$) {$h$};
-%
-%  % inputs of f: external on top, feedback below
-%  \draw[wire] ([xshift=-1cm,yshift=0.25cm]f.west) -- node[lbl] {$\Phi$} ([yshift=0.25cm]f.west);
-%
-%  \draw[wire] (f.east) -- node[lbl] {$A$} (c-in);
-%  \draw[wire] (c-up)   -- (g.west);
-%  \draw[wire] (c-down) -- (h.west);
-%  \draw[wire] (g.east) -- ++(1cm,0);
-%  \draw[ctrlwire] ($(c-ctrl)+(0,1cm)$) -- node[right] {$b$} (c-ctrl);
-%
-%  % feedback: h's output loops under the diagram back into f
-%  \coordinate (fbstart) at ($(h.east)+(0.6,0)$);
-%  \coordinate (fbbot)   at ($(h.south)+(0,-0.6)$);
-%  \coordinate (fbend)   at ($(f.west)+(-0.5,-0.25)$);
-%  \draw[wire] (h.east) -- (fbstart) |- (fbbot) -| (fbend) -- ([yshift=-0.25cm]f.west);
-%\end{tikzpicture}
-%\end{frame}
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                \[
+                \infer{
+                        \{ \Phi \} \> \prog{\blue{while}} \> \prog{b} \>
+                        \prog{p} \> 
+                        \{ \neg \prog{b} \wedge \Phi \}
+                }{
+                        \{ \Phi \wedge \prog{b} \} \> \prog{p} \> \{ \Phi \}
+                }
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+                \begin{tikzpicture}
+                  \cond{c}{$? \mathtt{b}$}
+                  \node[prog, anchor=west] (g) at ($(c-up)+(0.5,0)$) {$\mathtt{p}$};
+                
+                  % input wire, with the junction where the feedback re-enters
+                  \coordinate (fbjoin) at ($(c-in)+(-0.5,0)$);
+                  \draw[wire] ([xshift=-1.5cm]c-in) -- node[lbl, pos=0.25] {$\Phi$} (c-in);
+                
+                  % true branch into p
+                  \draw[wire] (c-up) -- node[lbl, xshift=-25pt] {$\Phi \wedge \mathtt{b}$} (g.west);
+                
+                  % false branch: just a wire, leaving to the right
+                  \coordinate (out) at ($(g.east |- c-down)+(1,0)$);
+                  \draw[wire] (c-down) -- node[lbl, xshift=-55pt,yshift=-20pt] 
+                          {$\Phi \wedge \neg \mathtt{b}$} (out);
+                
+                  % feedback: output of p goes over the top and back to the input
+                  \draw[wire, -, midarrow] (g.east) -- ++(0.6,0)
+                        |- node[lbl, pos=0.75] {$\Phi$} ($(g.north)+(0,0.7)$)
+                        -| (fbjoin);
+
+                  \draw[frontier] ([yshift=2.5cm,xshift=0.7cm]c-fork) 
+                            -- ([yshift=-1.5cm,xshift=0.7cm]c-fork);
+                \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
+
+\end{frame}
+
 
 \end{document}
