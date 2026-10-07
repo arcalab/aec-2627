@@ -38,6 +38,10 @@
 \usepackage{relsize}
 \usepackage[all]{xy}
 \usetikzlibrary{tikzmark,arrows.meta,calc,positioning}
+\tikzset{
+  prog/.style={draw, rounded corners=2pt, minimum width=1.4cm, minimum height=0.9cm},
+  wire/.style={-{Stealth[length=2mm]}}
+}
 
 \AtBeginSection[]
 {
@@ -197,9 +201,9 @@
         \end{block}
         %%
         \begin{tikzpicture}[remember picture,overlay]
-                \draw[<-,thick,red] (preds.north)+(0.0,0.1)  -- ++(0.0,0.3)
-                        -- ++(5.0,0.0) -- ++(0.0,0.6)
-                        node[above]{\footnotesize basic predicates, \eg\ $=$, $\leq$};
+                \draw[<-,thick,red] (preds.south)+(0.0,-0.1)  -- ++(0.0,-0.3)
+                        -- ++(2.0,0.0) -- ++(0.0,-0.3)
+                        node[below]{\footnotesize basic predicates, \eg\ $=$, $\leq$};
         \end{tikzpicture}
         %
 
@@ -315,7 +319,7 @@
 
         FOL is a \salert{logic} and not a \salert{programming language}
 
-        Do not try to program in FOL :-) 
+        Do not try to program in FOL
 
         \pause
         \vspace{1cm}
@@ -360,9 +364,9 @@
                 \infer{
                         \text{conclusion}
                 }{
-                        \text{condition}_1 
+                        \text{assumption}_1 
                         \quad \dots \quad
-                        \text{condition}_n
+                        \text{assumption}_n
                 }
         \]
 
@@ -371,6 +375,47 @@
         A rule for each program construct
 
         + a logical rule for changing pre- and post-conditions
+\end{frame}
+
+\begin{frame}{The proof pattern}
+
+        Program's \salert{syntactic structure} determines which rule to apply
+
+        Developing a correctness proof $\Rightarrow$ making a \salert{tree grow}
+        
+        \vspace{0.5cm}
+        \[
+                \infer{
+                        \tikzmarknode{concl}{\text{conclusion}}
+                }{
+                        \infer{
+                                \text{assumption} 
+                        }{
+                                \infer{
+                                \text{assumption}
+                                }{ 
+                                        \cdots
+                                }
+                                \, \cdots \,
+                                \infer{
+                                \text{assumption}
+                                }{
+                                        \checkmark
+                                }
+                        }
+                        \quad \cdots \quad
+                        \infer{
+                                \text{assumption}
+                        }{\cdots}
+                }
+        \]
+
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (concl.south)+(0.0,-0.2)  -- ++(0.0,-0.2)
+                        -- ++(0.0,-0.3)
+                        node[below]{\footnotesize the goal/root};
+        \end{tikzpicture}
+
 \end{frame}
 
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
@@ -420,6 +465,62 @@
                         \Xi \rightarrow \Omega
                 }
         \]
+\end{frame}
+
+\begin{frame}{Skip}
+%
+   \begin{minipage}[0.1\textheight]{\textwidth}
+%
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                %
+                \[
+                  \infer{\{ \Phi \} \> \prog{skip} \> \{ \Phi \} }{}
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+                %
+                \begin{tikzpicture}
+                  \node[prog] (f) {$f$};
+                  \node[prog, right=1.5cm of f] (g) {$g$};
+                  \draw[wire] (f.east) -- (g.west);
+                  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
+                  \draw[wire] (g.east) -- ++(1cm,0);
+                \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
+%
+\end{frame}
+
+\begin{frame}{Sequential composition}
+\begin{tikzpicture}
+  \node[prog] (f) {$f$};
+  \node[prog, right=1.5cm of f] (g) {$g$};
+  \draw[wire] (f.east) -- (g.west);
+  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
+  \draw[wire] (g.east) -- ++(1cm,0);
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Conditional}
+\begin{tikzpicture}
+  \node[prog] (f) {$f$};
+  \node[prog, right=1.5cm of f] (g) {$g$};
+  \draw[wire] (f.east) -- (g.west);
+  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
+  \draw[wire] (g.east) -- ++(1cm,0);
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{While-loop}
+\begin{tikzpicture}
+  \node[prog] (f) {$f$};
+  \node[prog, right=1.5cm of f] (g) {$g$};
+  \draw[wire] (f.east) -- (g.west);
+  \draw[wire] ([xshift=-1cm]f.west) -- (f.west);
+  \draw[wire] (g.east) -- ++(1cm,0);
+\end{tikzpicture}
 \end{frame}
 
 \end{document}
