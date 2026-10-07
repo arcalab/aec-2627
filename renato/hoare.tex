@@ -656,8 +656,51 @@ prog/.style={
         \end{column}
       \end{columns}
    \end{minipage}
-
 \end{frame}
 
+\begin{frame}{Strengthening and Weakening}
+
+    \begin{minipage}[0.1\textheight]{\textwidth}
+%
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                \[
+                        \infer{ \{ \Phi \} \> \prog{p} \> \{ \Omega \} }{
+                                         \Phi \rightarrow \Psi
+                                        \quad
+                                        \{ \Psi \} \> \prog{p} \> \{ \Xi \}
+                                        \quad
+                                        \Xi \rightarrow \Omega
+                                }
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}
+          \node[prog] (p) {$\mathtt{p}$};
+        
+          % input wire
+          \draw[wire] ([xshift=-2cm]p.west) -- node[lbl, xshift=0.5cm] {$\Psi$}
+                   node[lbl, xshift=-0.7cm] {$\Phi$} (p.west);
+        
+          % output wire
+          \draw[wire] (p.east) -- node[lbl, xshift=-0.6cm] {$\Xi$}
+                   node[lbl, xshift=0.5cm] {$\Omega$} ++(2cm,0);
+        
+          % frontier between Phi and Psi
+          \draw[frontier] ([xshift=-1.1cm,yshift=1cm]p.west)
+                       -- ([xshift=-1.1cm,yshift=-1cm]p.west);
+        
+          % frontier between Xi and Omega
+          \draw[frontier] ([xshift=1cm,yshift=1cm]p.east)
+                       -- ([xshift=1cm,yshift=-1cm]p.east);
+        \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
+
+   \pause
+   \vfill
+   This kind of \salert{string diagrammatic} reasoning is an intensive research area
+\end{frame}
 
 \end{document}
