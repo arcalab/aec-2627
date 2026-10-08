@@ -703,4 +703,46 @@ prog/.style={
    This kind of \salert{string diagrammatic} reasoning is an intensive research area
 \end{frame}
 
+\begin{frame}{Assignment}
+    \begin{minipage}[0.1\textheight]{\textwidth}
+%
+      \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+                \[
+                        \infer{\{ \Phi[\prog{e}/\prog{x}] \} \> \prog{ x : = e } \>
+                        \{ \Phi \} }{}
+                \]
+        \end{column}
+        \begin{column}{0.5\textwidth}
+                \begin{tikzpicture}[remember picture]
+                \node[prog] (p) {\tikzmarknode{asg}{$\mathtt{x:=e}$}};
+        
+          % input wire
+          \draw[wire] ([xshift=-2cm]p.west) -- (p.west);
+        
+          % output wire
+          \draw[wire] (p.east) --  
+                  node[lbl, xshift=0.5cm] 
+                  {\tikzmarknode{con}{$\Phi(\dots,\mathtt{y},\mathtt{x},\mathtt{z},\dots)$}} ++(2cm,0);
+        \end{tikzpicture}
+        \end{column}
+      \end{columns}
+   \end{minipage}
+
+       \begin{tikzpicture}[remember picture,overlay]
+         \draw[->,thick,red]
+           ([yshift=0.5cm]con.north) 
+           -- node[midway, right=3pt] {\footnotesize $\mathtt{x} \mapsto \mathtt{e}$} ++(0,1.2)
+           node[above] (res) {\footnotesize $\Phi(\dots,\mathtt{y},\mathtt{e},\mathtt{z},\dots)$};
+       
+         % from the new formula down to the input wire of x := e
+         \draw[->,thick,red]
+           (res.west) -| ([xshift=-1cm,yshift=0.3cm]p.west);
+       \end{tikzpicture}
+        \begin{tikzpicture}[remember picture,overlay]
+                \draw[<-,thick,red] (asg.south)+(-0.5,-0.5)  -- ++(-0.5,-0.5)
+                        -- ++(0.0,-0.5)
+                        node[below]{\footnotesize only $\mathtt{x}$ changes};
+        \end{tikzpicture}
+\end{frame}
 \end{document}
