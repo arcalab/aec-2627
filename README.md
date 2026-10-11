@@ -27,7 +27,7 @@ caso, pior caso, e caso médio; análise amortizada; casos de estudo.
 | 21.Set a 24.Set  | [Ficha 1 (Especificação)](./pdfs/ficha1tp.pdf)          | Validade de um Triplo de Hoare. Regras de prova: Sequência, atribuição e condicionais |
 | 28.Set a 02.Out   |  [Ficha 1 (Correcção)](./pdfs/ficha1tp.pdf)                  | Correcção de ciclos: variantes e invariantes.                      |
 | 05.Out a 09.Out   |  [Ficha 1 (Correcção)](./pdfs/ficha1tp.pdf)               | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
-| 12.Out a 16.Out  | [Ficha 2 (Contagem)] (./pdfs/ficha2tp.pdf)                  | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
+| 12.Out a 16.Out  | [Ficha 2 (Contagem)](./pdfs/ficha2tp.pdf)                  | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
 | 19.Out a 23.Out  | [Ficha 2 (Recorrências)](./pdfs/ficha2tp.pdf)              | Análise amortizada                                                 |
 | 26.Out a 29.Out  | [Ficha 2 (Caso médio / análise amortizada)](./pdfs/ficha2tp.pdf)              | Revisões |
 | 02.Nov a 06.Nov  |  | Estruturas de dados para representar dicionários: tabelas de Hash  |
