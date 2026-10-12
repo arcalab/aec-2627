@@ -66,6 +66,8 @@ O exame de recurso será no dia 28 Jan.
 
 * [C1. Especificação e Correcção de Algoritmos](https://www.dropbox.com/scl/fi/si8rl0wnpramf3k140jp3/C1.-Especifica-o-e-Correc-o-de-Algoritmos.pdf?rlkey=c8gwl9aiax8j5xsowtv4f96o4&dl=0)
 * [C2. Correção de Algoritmos com Ciclos](https://www.dropbox.com/scl/fi/9ggkdd9cz79olsgdz9enr/C2.-Correc-o-de-Algoritmos-com-Ciclos.pdf?rlkey=2ilvstmmtyxpgij6v6inttbs5&dl=0)
+* [T1. Tempo de Execução de Algoritmos Iterativos](https://www.dropbox.com/scl/fi/argncz6lpdxaiaqjhfgjy/T1.-Tempo-de-Execu-o-de-Algoritmos-Iterativos.pdf?rlkey=khrabx7fvoi0qddpuqch29cpz&dl=0)
+* [T2. Análise de Pior Caso, Melhor Caso, e Caso Médio](https://www.dropbox.com/scl/fi/sk8m1ovs9xfd4o8gamzcs/T2.-An-lise-de-Pior-Caso-Melhor-Caso-e-Caso-M-dio.pdf?rlkey=xl9kb0r3b0q4de12mronnubhw&dl=0)
 
 ### Notas JBB
 
