@@ -70,9 +70,13 @@ O exame de recurso será no dia 28 Jan.
 * [T2. Análise de Pior Caso, Melhor Caso, e Caso Médio](https://www.dropbox.com/scl/fi/591mxg2l7oqa2kss18gnf/T2.-An-lise-de-Pior-Caso-Melhor-Caso-e-Caso-M-dio.pdf?rlkey=v0q2vd4ziz3knri6neb95tw62&dl=0)
 * [T3. Análise do Tempo de Execução de Algoritmos Recursivos](https://www.dropbox.com/scl/fi/y87bwutsgugvfxlfkqtla/T3.-An-lise-do-Tempo-de-Execu-o-de-Algoritmos-Recursivos.pdf?rlkey=ex346xkdfb6rn9o50uclvs12w&dl=0)
 * [T4. Tópicos sobre Algoritmos de Ordenação](https://www.dropbox.com/scl/fi/ykk6oth6h8yyxlai8pdvf/T4.-T-picos-sobre-Algoritmos-de-Ordena-o.pdf?rlkey=8cmq1f9voiyximwzx5slyugue&dl=0)
-  * Animação: [Insertion Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/fbcsgi7dndexom0u0kib8/Insertion-Sort-Visualization.html?rlkey=3vikcccchnhf13mmhs8l1egbd&dl=0)
-  * Animação: [Merge Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/kft2rm3rlm46p2jasooeq/Merge-Sort-Visualization.html?rlkey=eyr2plxlos78veqp736q94uaq&dl=0)
-  * Animação: [Counting Sort — passo a passo](https://www.dropbox.com/scl/fi/bd9cjdfpvm2iz52nfcn2o/Counting-Sort-Animation.html?rlkey=rum4rj8057nlgb7zh6p44kc9z&dl=0)
+
+### Animações
+
+* [Insertion Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/fbcsgi7dndexom0u0kib8/Insertion-Sort-Visualization.html?rlkey=3vikcccchnhf13mmhs8l1egbd&dl=0)
+* [Merge Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/kft2rm3rlm46p2jasooeq/Merge-Sort-Visualization.html?rlkey=eyr2plxlos78veqp736q94uaq&dl=0)
+* [Counting Sort — passo a passo](https://www.dropbox.com/scl/fi/bd9cjdfpvm2iz52nfcn2o/Counting-Sort-Animation.html?rlkey=rum4rj8057nlgb7zh6p44kc9z&dl=0)
+* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](https://www.dropbox.com/scl/fi/sd1mojk0o2d1d49wemfye/Towers-of-Hanoi-Animation.html?rlkey=unc07j88rzzkx3zgxgtb961ip&dl=0)
 
 ### Notas JBB
 
