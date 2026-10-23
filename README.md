@@ -4,7 +4,7 @@ Esta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
 do ponto de vista da sua correcção e tempo de execução. Visa também tornar os
 estudantes proficientes na utilização de estruturas de dados avançadas, por
 exemplo grafos. A UC introduz ainda conceitos elementares de complexidade
-algorítmica, tais como a noção do problema NP-completo.
+algorítmica, tais como a noção de problema NP-completo.
 
 1. Introdução à análise de correção de algoritmos: pré e pós-condições;
    invariantes de ciclo; anotação de programas.
