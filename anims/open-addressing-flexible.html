@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Open Addressing — Interactive Linear Probing</title>
+<style>
+  :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111827; background: #f8fafc; font-synthesis: none; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; }
+  main { max-width: 1020px; margin: 0 auto; }
+  h1 { font-size: 1.45rem; margin: 0 0 4px; letter-spacing: -.02em; }
+  .sub { color: #64748b; font-size: .92rem; margin-bottom: 18px; }
+  .panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 13px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(15,23,42,.045); }
+  .topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .phase { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .75rem; font-weight: 750; background: #e0e7ff; color: #3730a3; margin-bottom: 10px; }
+  .counter { color: #64748b; font-size: .78rem; font-variant-numeric: tabular-nums; }
+  .narr { min-height: 58px; font-size: .96rem; line-height: 1.5; color: #1e293b; }
+  .narr b { color: #b45309; }
+  .label { font-size: .78rem; font-weight: 750; color: #334155; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .055em; }
+  .op-row { display: flex; gap: 7px; flex-wrap: wrap; min-height: 42px; }
+  .op-chip { min-width: 52px; text-align: center; padding: 8px 10px; border-radius: 8px; background: #f1f5f9; color: #475569; font-weight: 750; border: 1px solid transparent; position: relative; }
+  .op-chip small { display: block; font-size: .64rem; font-weight: 600; color: #94a3b8; margin-top: 1px; }
+  .op-chip.current { background: #fef3c7; border-color: #f59e0b; color: #92400e; transform: translateY(-2px); }
+  .op-chip.done { background: #d1fae5; color: #065f46; }
+  .table-wrap { overflow-x: auto; padding-bottom: 2px; }
+  .hash-table { display: grid; gap: 7px; min-width: 0; }
+  .slot { min-width: 0; text-align: center; }
+  .slot-index { color: #94a3b8; font-size: .7rem; margin-bottom: 5px; font-weight: 650; }
+  .slot-box { height: 62px; border: 1.5px solid #cbd5e1; border-radius: 9px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; font-weight: 750; color: #334155; transition: background .2s, border-color .2s, transform .2s, box-shadow .2s; position: relative; }
+  .slot-box.empty { color: #cbd5e1; font-weight: 500; }
+  .slot-box.occupied { background: #e2e8f0; border-color: #cbd5e1; }
+  .slot-box.active { background: #fef3c7; border-color: #f59e0b; color: #92400e; transform: translateY(-3px); box-shadow: 0 5px 12px rgba(245,158,11,.16); }
+  .slot-box.collision { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .slot-box.inserted { background: #d1fae5; border-color: #10b981; color: #065f46; transform: translateY(-3px); box-shadow: 0 5px 12px rgba(16,185,129,.13); }
+  .slot-box.deleted { background: #f1f5f9; border: 2px dashed #8b5cf6; color: #6d28d9; }
+  .slot-box.tombstone-active { background: #ede9fe; border: 2px dashed #7c3aed; color: #5b21b6; transform: translateY(-3px); box-shadow: 0 5px 12px rgba(124,58,237,.13); }
+  .slot-note { height: 18px; padding-top: 3px; font-size: .63rem; color: #64748b; font-weight: 700; white-space: nowrap; overflow: hidden; }
+  .formula-row { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+  .formula { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 9px; padding: 9px 12px; font-size: .9rem; color: #334155; font-variant-numeric: tabular-nums; }
+  .formula strong { color: #0f172a; }
+  .probe-list { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 34px; }
+  .probe { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 7px; background: #f1f5f9; color: #475569; font-size: .78rem; font-weight: 700; }
+  .probe.bad { background: #fee2e2; color: #991b1b; }
+  .probe.good { background: #d1fae5; color: #065f46; }
+  .probe.tombstone { background: #ede9fe; color: #5b21b6; }
+  .probe.current { outline: 1px solid #f59e0b; }
+  .arrow { color: #94a3b8; font-size: .8rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; color: #64748b; font-size: .75rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; border: 1px solid #cbd5e1; display: inline-block; }
+  .swatch.empty { background: #f8fafc; }
+  .swatch.active { background: #fef3c7; border-color: #f59e0b; }
+  .swatch.collision { background: #fee2e2; border-color: #ef4444; }
+  .swatch.inserted { background: #d1fae5; border-color: #10b981; }
+  .swatch.deleted { background: #ede9fe; border: 1px dashed #7c3aed; }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  button { border: 0; background: #0ea5e9; color: #fff; padding: 9px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: .86rem; }
+  button:hover { background: #0284c7; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #7dd3fc; outline-offset: 2px; }
+  button.sec { background: #e2e8f0; color: #334155; }
+  button.sec:hover { background: #cbd5e1; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  input[type=range] { width: 120px; accent-color: #0284c7; vertical-align: middle; }
+  input[type=text], input[type=number] { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: .88rem; color: #0f172a; }
+  #operations { width: min(650px, 100%); }
+  #tableSize { width: 76px; }
+  .config { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 13px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+  .config label { color: #475569; font-size: .82rem; font-weight: 650; }
+  .hint { color: #64748b; font-size: .75rem; line-height: 1.5; }
+  .error { color: #b91c1c; font-size: .78rem; min-height: 18px; margin-top: 5px; }
+  .footnote { font-size: .82rem; color: #475569; line-height: 1.55; }
+  .footnote p { margin: 7px 0; }
+  code { background: #f1f5f9; border-radius: 4px; padding: 1px 4px; color: #0f172a; }
+  @media (max-width: 620px) { body { padding: 14px; } .panel { padding: 13px; } h1 { font-size: 1.25rem; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Open Addressing — step by step</h1>
+<div class="sub">Explore insertion, lookup, and deletion using linear probing. Choose the exact operations and their order.</div>
+
+<section class="panel" aria-live="polite">
+  <div class="topline">
+    <span class="phase" id="phase">Setup</span>
+    <span class="counter" id="counter">Step 1</span>
+  </div>
+  <div class="narr" id="narr">Choose a sequence of operations, then step through the algorithm.</div>
+</section>
+
+<section class="panel">
+  <div class="label">Operation sequence</div>
+  <div class="op-row" id="opsRow"></div>
+  <div class="hint" style="margin-top:8px">The operations are performed from left to right. Green means completed; yellow marks the current operation.</div>
+</section>
+
+<section class="panel">
+  <div class="label">Hash table</div>
+  <div class="table-wrap"><div class="hash-table" id="table"></div></div>
+  <div class="legend">
+    <span><i class="swatch empty"></i> Never used / empty</span>
+    <span><i class="swatch active"></i> Slot being checked</span>
+    <span><i class="swatch collision"></i> Occupied by another key</span>
+    <span><i class="swatch inserted"></i> Inserted / found</span>
+    <span><i class="swatch deleted"></i> Deleted (tombstone)</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="label">Hash calculation and probe sequence</div>
+  <div class="formula-row" id="formulaRow"></div>
+  <div style="height:12px"></div>
+  <div class="label" style="margin-bottom:7px">Positions examined</div>
+  <div class="probe-list" id="probeList"><span class="hint">No positions examined yet.</span></div>
+</section>
+
+<section class="panel">
+  <div class="controls">
+    <button id="playBtn">▶ Play</button>
+    <button id="stepBtn" class="sec">Step</button>
+    <button id="backBtn" class="sec">← Back</button>
+    <button id="resetBtn" class="sec">Reset</button>
+    <label class="hint">Speed <input type="range" id="speed" min="300" max="1800" value="1000" step="100" /></label>
+  </div>
+  <div class="config">
+    <label for="operations">Operations:</label>
+    <input id="operations" type="text" value="+23, +43, +13, +27, -43, ?13, +53" aria-label="Sequence of insert, delete and search operations" />
+    <label for="tableSize">Table size:</label>
+    <input id="tableSize" type="number" min="3" max="16" value="10" />
+    <button id="applyBtn" class="sec">Apply</button>
+  </div>
+  <div class="hint">Use <strong>+k</strong> to insert key k, <strong>−k</strong> to delete it, and <strong>?k</strong> to search for it. Separate operations with commas. Keys must be non-negative integers; table size can be 3–16.</div>
+  <div class="controls" style="margin-top:10px">
+    <button id="exampleBtn" class="sec">Load example</button>
+    <button id="randomBtn" class="sec">Generate random sequence</button>
+    <button id="clearBtn" class="sec">Clear table</button>
+  </div>
+  <div class="error" id="error" role="alert"></div>
+</section>
+
+<section class="panel footnote">
+  <strong>Why does deletion leave a tombstone?</strong>
+  <p>A search may need to pass through a position where a key used to be. If deletion changed that position back to <em>never used</em>, a later search could stop there and incorrectly report that a key further along the probe sequence is absent.</p>
+  <p>A tombstone is therefore different from an empty slot: searches continue through it, while insertions may reuse it. When inserting into a tombstone, the algorithm continues probing until it can rule out an existing copy of the key.</p>
+  <p><strong>Probe formula:</strong> <code>pᵢ = (h(k) + i) mod m</code>, where <code>h(k) = k mod m</code> and <code>m</code> is the table size.</p>
+</section>
+</main>
+
+<script>
+(() => {
+  const TOMBSTONE = "__DELETED__";
+  const DEFAULT_OPS = [
+    { type: "insert", key: 23 }, { type: "insert", key: 43 }, { type: "insert", key: 13 },
+    { type: "insert", key: 27 }, { type: "delete", key: 43 }, { type: "search", key: 13 }, { type: "insert", key: 53 }
+  ];
+  let operations = DEFAULT_OPS.map(op => ({ ...op }));
+  let tableSize = 10;
+  let steps = [];
+  let stepIndex = 0;
+  let playing = false;
+  let timer = null;
+  let speed = 1000;
+
+  const $ = id => document.getElementById(id);
+  const clone = x => JSON.parse(JSON.stringify(x));
+  const opText = op => `${op.type === "insert" ? "+" : op.type === "delete" ? "−" : "?"}${op.key}`;
+  const pos = (key, probe, size) => (key % size + probe) % size;
+
+  function snapshot(state) {
+    steps.push({ ...state, table: [...state.table], trail: clone(state.trail || []) });
+  }
+
+  function addProbe(state, trail, slot, result, value) {
+    const item = { slot, result };
+    if (value !== undefined) item.value = value;
+    trail.push(item);
+    snapshot({ ...state, slot, trail, kind: result, probe: trail.length - 1 });
+  }
+
+  function buildSteps(ops, size) {
+    steps = [];
+    const table = Array(size).fill(null);
+    snapshot({ phase: "Setup", kind: "setup", table, opIndex: -1, op: null, key: null, hash: null, probe: null, slot: null, trail: [],
+      narr: `We will execute <b>${ops.length}</b> operations in the order shown. The table has <b>${size}</b> slots and uses h(k) = k mod ${size}.` });
+
+    ops.forEach((op, opIndex) => {
+      const { type, key } = op;
+      const hash = key % size;
+      const action = type === "insert" ? "Insert" : type === "delete" ? "Delete" : "Search for";
+      const trail = [];
+      const base = { table, opIndex, op, key, hash, probe: null, slot: null, trail };
+      snapshot({ ...base, phase: `${action} ${key}`, kind: "op-start",
+        narr: `${action} <b>${key}</b>. Its home position is h(${key}) = ${key} mod ${size} = <b>${hash}</b>.` });
+
+      if (type === "insert") {
+        let firstTombstone = -1;
+        let finished = false;
+        for (let probe = 0; probe < size; probe++) {
+          const slot = pos(key, probe, size);
+          const value = table[slot];
+          if (value === key) {
+            trail.push({ slot, result: "found", value });
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "already-present", probe, slot, trail,
+              narr: `<b>${key}</b> is already stored at slot <b>${slot}</b>. No duplicate is inserted.` });
+            finished = true;
+            break;
+          }
+          if (value === null) {
+            trail.push({ slot, result: "empty" });
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "empty-stop", probe, slot, trail, targetSlot: firstTombstone,
+              narr: firstTombstone >= 0
+                ? `Slot <b>${slot}</b> has never been used, so the search for a duplicate can stop. We remembered tombstone <b>${firstTombstone}</b>; insert <b>${key}</b> there instead.`
+                : `Slot <b>${slot}</b> has never been used. It is the first available position, so insert <b>${key}</b> here.` });
+            const target = firstTombstone >= 0 ? firstTombstone : slot;
+            table[target] = key;
+            const targetProbe = (target - hash + size) % size;
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "inserted", probe: targetProbe, slot: target, trail, targetSlot: target,
+              narr: `Insert <b>${key}</b> into slot <b>${target}</b>${firstTombstone >= 0 ? `, reusing the earlier tombstone` : ""}.` });
+            finished = true;
+            break;
+          }
+          if (value === TOMBSTONE) {
+            if (firstTombstone < 0) firstTombstone = slot;
+            trail.push({ slot, result: "tombstone" });
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "tombstone-skip", probe, slot, trail, targetSlot: firstTombstone,
+              narr: firstTombstone === slot
+                ? `Slot <b>${slot}</b> is a tombstone. Remember it as a possible insertion position, but continue probing to check that <b>${key}</b> is not already present further along.`
+                : `Slot <b>${slot}</b> is another tombstone. The first reusable position remains <b>${firstTombstone}</b>; continue probing.` });
+          } else {
+            trail.push({ slot, result: "collision", value });
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "collision", probe, slot, trail,
+              narr: `Collision at slot <b>${slot}</b>: it contains <b>${value}</b>. Linear probing checks the next position.` });
+          }
+        }
+        if (!finished) {
+          if (firstTombstone >= 0) {
+            const target = firstTombstone;
+            table[target] = key;
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "inserted", probe: (target - hash + size) % size, slot: target, trail, targetSlot: target,
+              narr: `We have checked every slot and found no existing copy of <b>${key}</b>. Reuse the remembered tombstone at slot <b>${target}</b>.` });
+          } else {
+            snapshot({ ...base, phase: `Insert ${key}`, kind: "full", probe: size - 1, slot: null, trail,
+              narr: `Every slot is occupied and there is no tombstone. The table is full, so <b>${key}</b> cannot be inserted.` });
+          }
+        }
+      } else {
+        let finished = false;
+        for (let probe = 0; probe < size; probe++) {
+          const slot = pos(key, probe, size);
+          const value = table[slot];
+          if (value === null) {
+            trail.push({ slot, result: "empty" });
+            snapshot({ ...base, phase: `${action} ${key}`, kind: "not-found-empty", probe, slot, trail,
+              narr: `Slot <b>${slot}</b> has never been used. The probe sequence ends here, so <b>${key} is not in the table</b>.` });
+            finished = true;
+            break;
+          }
+          if (value === TOMBSTONE) {
+            trail.push({ slot, result: "tombstone" });
+            snapshot({ ...base, phase: `${action} ${key}`, kind: "tombstone-skip", probe, slot, trail,
+              narr: `Slot <b>${slot}</b> is a tombstone. <b>Do not stop here:</b> a key may have been placed further along this probe sequence.` });
+            continue;
+          }
+          if (value === key) {
+            trail.push({ slot, result: "found", value });
+            if (type === "delete") {
+              snapshot({ ...base, phase: `Delete ${key}`, kind: "delete-found", probe, slot, trail,
+                narr: `Found <b>${key}</b> at slot <b>${slot}</b>. Mark it as deleted, but do not turn the slot into a never-used empty slot.` });
+              table[slot] = TOMBSTONE;
+              snapshot({ ...base, phase: `Delete ${key}`, kind: "deleted", probe, slot, trail,
+                narr: `Deleted <b>${key}</b>. Slot <b>${slot}</b> now contains a <b>tombstone (DEL)</b>, preserving the probe chain.` });
+            } else {
+              snapshot({ ...base, phase: `Search ${key}`, kind: "search-found", probe, slot, trail,
+                narr: `Found <b>${key}</b> at slot <b>${slot}</b>.` });
+            }
+            finished = true;
+            break;
+          }
+          trail.push({ slot, result: "collision", value });
+          snapshot({ ...base, phase: `${action} ${key}`, kind: "collision", probe, slot, trail,
+            narr: `Slot <b>${slot}</b> contains <b>${value}</b>, not <b>${key}</b>. Continue probing.` });
+        }
+        if (!finished) {
+          snapshot({ ...base, phase: `${action} ${key}`, kind: "not-found-full", probe: size - 1, slot: null, trail,
+            narr: `We examined every slot without finding <b>${key}</b>. It is not in the table.` });
+        }
+      }
+    });
+
+    snapshot({ phase: "Done", kind: "done", table, opIndex: ops.length, op: null, key: null, hash: null, probe: null, slot: null, trail: [],
+      narr: `All <b>${ops.length}</b> operations are complete. Try changing the sequence to explore different collision chains, deletions, searches, and tombstone reuse.` });
+  }
+
+  function render(state) {
+    $("phase").textContent = state.phase;
+    $("counter").textContent = `Step ${stepIndex + 1} of ${steps.length}`;
+    $("narr").innerHTML = state.narr;
+
+    $("opsRow").innerHTML = operations.map((op, i) => {
+      const current = i === state.opIndex;
+      const done = i < state.opIndex || state.kind === "done";
+      const suffix = op.type === "insert" ? "insert" : op.type === "delete" ? "delete" : "search";
+      return `<div class="op-chip ${current ? "current" : done ? "done" : ""}">${opText(op)}<small>${current ? "current" : done ? "done" : suffix}</small></div>`;
+    }).join("");
+
+    const trailBySlot = new Map(state.trail.map(item => [item.slot, item.result]));
+    const minWidth = Math.max(480, tableSize * 52);
+    $("table").style.gridTemplateColumns = `repeat(${tableSize}, minmax(0, 1fr))`;
+    $("table").style.minWidth = `${minWidth}px`;
+    $("table").innerHTML = state.table.map((value, slot) => {
+      let cls = value === null ? "empty" : value === TOMBSTONE ? "deleted" : "occupied";
+      let note = value === null ? "empty" : value === TOMBSTONE ? "tombstone" : "stored";
+      const trailResult = trailBySlot.get(slot);
+      if (trailResult === "collision") { cls = "collision"; note = "occupied"; }
+      if (trailResult === "tombstone") { cls = "tombstone-active"; note = "pass through"; }
+      if (trailResult === "empty") { cls = "active"; note = "empty"; }
+      if (state.slot === slot && state.kind === "inserted") { cls = "inserted"; note = "inserted"; }
+      if (state.slot === slot && state.kind === "deleted") { cls = "deleted"; note = "deleted"; }
+      if (state.slot === slot && state.kind === "search-found") { cls = "inserted"; note = "found"; }
+      if (state.slot === slot && state.kind === "delete-found") { cls = "active"; note = "to delete"; }
+      if (state.slot === slot && state.kind === "already-present") { cls = "inserted"; note = "already stored"; }
+      if (state.slot === slot && state.kind === "tombstone-skip") { cls = "tombstone-active"; note = "continue"; }
+      return `<div class="slot"><div class="slot-index">${slot}</div><div class="slot-box ${cls}">${value === null ? "·" : value === TOMBSTONE ? "DEL" : value}</div><div class="slot-note">${note}</div></div>`;
+    }).join("");
+
+    if (state.key !== null) {
+      const formula = state.probe === null
+        ? `<div class="formula"><strong>h(${state.key})</strong> = ${state.key} mod ${tableSize} = ${state.hash}</div>`
+        : `<div class="formula"><strong>h(${state.key})</strong> = ${state.hash}</div><div class="formula"><strong>p<sub>${state.probe}</sub></strong> = (${state.hash} + ${state.probe}) mod ${tableSize} = ${state.slot === null ? "—" : state.slot}</div>`;
+      $("formulaRow").innerHTML = formula;
+    } else {
+      $("formulaRow").innerHTML = `<div class="formula">h(k) = k mod ${tableSize}</div><div class="formula">p<sub>i</sub> = (h(k) + i) mod ${tableSize}</div>`;
+    }
+
+    if (!state.trail.length) {
+      $("probeList").innerHTML = `<span class="hint">No positions examined yet.</span>`;
+    } else {
+      $("probeList").innerHTML = state.trail.map((item, i) => {
+        const final = i === state.trail.length - 1;
+        let cls = "";
+        let label = `slot ${item.slot}`;
+        if (item.result === "collision") { cls = "bad"; label += `: ${item.value}`; }
+        else if (item.result === "tombstone") { cls = "tombstone"; label += ": DEL (continue)"; }
+        else if (item.result === "found") { cls = "good"; label += `: found ${item.value}`; }
+        else if (item.result === "empty") { cls = "good"; label += ": empty"; }
+        return `${i ? `<span class="arrow">→</span>` : ""}<span class="probe ${cls} ${final ? "current" : ""}">${label}</span>`;
+      }).join("");
+    }
+
+    $("backBtn").disabled = stepIndex === 0;
+    $("stepBtn").disabled = stepIndex >= steps.length - 1;
+  }
+
+  function stop() {
+    playing = false;
+    if (timer !== null) clearInterval(timer);
+    timer = null;
+    $("playBtn").textContent = "▶ Play";
+  }
+  function advance() {
+    if (stepIndex < steps.length - 1) { stepIndex++; render(steps[stepIndex]); }
+    else stop();
+  }
+  function play() {
+    if (playing) { stop(); return; }
+    if (stepIndex >= steps.length - 1) stepIndex = 0;
+    playing = true;
+    $("playBtn").textContent = "⏸ Pause";
+    render(steps[stepIndex]);
+    timer = setInterval(advance, 2200 - speed);
+    advance();
+  }
+  function reset() {
+    stop();
+    buildSteps(operations, tableSize);
+    stepIndex = 0;
+    render(steps[0]);
+  }
+
+  function parseOperations(raw) {
+    const parts = raw.split(",").map(s => s.trim()).filter(Boolean);
+    if (!parts.length) return [];
+    if (parts.length > 60) throw new Error("Please use at most 60 operations in one animation.");
+    return parts.map(token => {
+      const match = token.match(/^([+\-?])\s*(\d+)$/);
+      if (!match) throw new Error(`“${token}” is not valid. Use +key (insert), -key (delete), or ?key (search).`);
+      const key = Number(match[2]);
+      if (!Number.isSafeInteger(key)) throw new Error(`Key in “${token}” is too large.`);
+      const type = match[1] === "+" ? "insert" : match[1] === "-" ? "delete" : "search";
+      return { type, key };
+    });
+  }
+
+  function applyInputs() {
+    try {
+      const newOps = parseOperations($("operations").value);
+      const newSize = Number($("tableSize").value);
+      if (!Number.isInteger(newSize) || newSize < 3 || newSize > 16) throw new Error("Table size must be an integer between 3 and 16.");
+      operations = newOps;
+      tableSize = newSize;
+      $("error").textContent = "";
+      reset();
+    } catch (err) {
+      $("error").textContent = err.message;
+    }
+  }
+
+  $("playBtn").addEventListener("click", play);
+  $("stepBtn").addEventListener("click", () => { stop(); advance(); });
+  $("backBtn").addEventListener("click", () => { stop(); if (stepIndex > 0) { stepIndex--; render(steps[stepIndex]); } });
+  $("resetBtn").addEventListener("click", reset);
+  $("speed").addEventListener("input", e => { speed = Number(e.target.value); if (playing) { stop(); play(); } });
+  $("applyBtn").addEventListener("click", applyInputs);
+  $("operations").addEventListener("keydown", e => { if (e.key === "Enter") applyInputs(); });
+  $("tableSize").addEventListener("keydown", e => { if (e.key === "Enter") applyInputs(); });
+  $("exampleBtn").addEventListener("click", () => {
+    $("operations").value = "+23, +43, +13, +27, -43, ?13, +53";
+    $("tableSize").value = "10";
+    applyInputs();
+  });
+  $("randomBtn").addEventListener("click", () => {
+    const size = Number($("tableSize").value) || 10;
+    const base = Math.floor(Math.random() * 30) + 10;
+    const keys = [base, base + size, base + 2 * size, base + 1, base + size + 1];
+    const ops = [`+${keys[0]}`, `+${keys[1]}`, `+${keys[2]}`, `+${keys[3]}`, `-${keys[1]}`, `?${keys[2]}`, `+${keys[1] + 3 * size}`];
+    $("operations").value = ops.join(", ");
+    applyInputs();
+  });
+  $("clearBtn").addEventListener("click", () => {
+    $("operations").value = "";
+    applyInputs();
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>
