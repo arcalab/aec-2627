@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heapsort (min-heap) — C code &amp; step-by-step simulation</title>
+<style>
+  :root {
+    --bg: #f1f5f9; --card: #ffffff; --border: #e2e8f0;
+    --text: #0f172a; --muted: #64748b; --faint: #94a3b8;
+    --indigo: #4f46e5; --indigo-light: #eef2ff; --indigo-border: #c7d2fe;
+    --emerald: #047857; --emerald-light: #ecfdf5; --emerald-border: #6ee7b7;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; padding: 20px; }
+  .wrap { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  .subtitle { font-size: 14px; color: var(--muted); margin: 0 0 18px; }
+  h2 { font-size: 14px; font-weight: 600; color: #334155; margin: 0 0 10px; }
+  .grid { display: grid; grid-template-columns: 2fr 3fr; gap: 16px; }
+  @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+          box-shadow: 0 1px 2px rgba(0,0,0,.05); padding: 16px; }
+  footer { margin-top: 16px; font-size: 11px; color: var(--faint); line-height: 1.6; }
+
+  /* ---- code panel ---- */
+  .code-panel { position: relative; max-height: 480px; overflow-y: auto; padding-right: 4px; }
+  .code-block + .code-block { margin-top: 16px; }
+  .code-block-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .fn-name { color: var(--indigo); font-weight: 700; font-size: 12px; font-family: ui-monospace, monospace; }
+  .fn-desc { color: var(--faint); font-size: 10px; }
+  .code-line { display: flex; align-items: flex-start; border-left: 4px solid transparent;
+               padding: 1px 4px; border-radius: 0 4px 4px 0; }
+  .code-line.active { background: #fef3c7; border-left-color: #fbbf24; }
+  .ln { width: 28px; flex-shrink: 0; text-align: right; padding-right: 8px;
+        color: #cbd5e1; font-size: 10px; font-family: ui-monospace, monospace; user-select: none; }
+  .code-text { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+               font-size: 12.5px; line-height: 1.55; white-space: pre; }
+  .cmt { color: #94a3b8; font-style: italic; }
+  .kw  { color: #7c3aed; font-weight: 500; }
+  .fn  { color: #0284c7; }
+  .num { color: #d97706; }
+  .id  { color: #1e293b; }
+  .sym { color: #64748b; }
+
+  /* ---- call stack ---- */
+  .frame { display: flex; align-items: center; gap: 8px; border-radius: 8px; padding: 6px 12px;
+           border: 1px solid var(--border); background: #fff; margin-bottom: 6px; }
+  .frame.top { background: var(--indigo-light); border-color: #a5b4fc; }
+  .fname { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .frame.top .fname { color: #4338ca; }
+  .spacer { flex: 1; }
+  .var { font-family: ui-monospace, monospace; font-size: 11px; background: #fff;
+         border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; color: #334155; }
+  .hint { font-size: 10px; color: var(--faint); margin: 4px 0 0; }
+
+  /* ---- controls ---- */
+  .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; }
+  .presets-label { font-size: 12px; color: var(--faint); margin-right: 4px; }
+  .chip { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500;
+          background: var(--indigo-light); color: #4338ca; border: 1px solid var(--indigo-border);
+          cursor: pointer; transition: background .15s; }
+  .chip:hover { background: #e0e7ff; }
+  .input-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .input-row input { flex: 1; min-width: 200px; padding: 6px 12px; border-radius: 8px;
+                     border: 1px solid #cbd5e1; font-size: 14px; font-family: ui-monospace, monospace; }
+  .input-row input:focus { outline: none; box-shadow: 0 0 0 2px #818cf8; }
+  .err { color: #e11d48; font-size: 12px; margin: 6px 0 0; min-height: 15px; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+  .btn { padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 500;
+         background: #fff; border: 1px solid #cbd5e1; color: #334155; cursor: pointer; }
+  .btn:hover:not(:disabled) { background: #f8fafc; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn.primary { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+  .btn.primary:hover:not(:disabled) { background: #6366f1; }
+  select { padding: 6px 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; background: #fff; }
+  .step-counter { margin-left: auto; font-size: 12px; color: var(--muted); font-family: ui-monospace, monospace; }
+  input[type=range] { width: 100%; margin-top: 10px; accent-color: var(--indigo); }
+
+  /* ---- badges / phases ---- */
+  .badge { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 10px; border: 1px solid transparent; }
+  .badge.start    { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+  .badge.heapify  { background: var(--indigo-light); color: #4338ca; border-color: #a5b4fc; }
+  .badge.sort     { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+  .badge.done     { background: var(--emerald-light); color: var(--emerald); border-color: var(--emerald-border); }
+  .tree-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .tree-head h2 { margin: 0; }
+  .func-badge { font-size: 11px; font-family: ui-monospace, monospace; background: #f1f5f9;
+                border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; color: var(--muted); }
+  .msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .msg-head h2 { margin: 0; }
+  .msg { font-size: 14px; color: #334155; line-height: 1.6; margin: 0; }
+
+  /* ---- array strip ---- */
+  .scroll { overflow-x: auto; }
+  .cells { display: flex; }
+  .cell { width: 44px; flex-shrink: 0; border-radius: 8px; border: 1px solid; padding: 6px 0; text-align: center; }
+  .cell.heap { background: var(--indigo-light); border-color: #a5b4fc; }
+  .cell.sorted { background: var(--emerald-light); border-color: var(--emerald-border); }
+  .cell.cur { box-shadow: 0 0 0 2px #f59e0b; }
+  .cell.cmp { box-shadow: 0 0 0 2px #0ea5e9; }
+  .cell.swp { box-shadow: 0 0 0 2px #f43f5e; }
+  .val { font-weight: 700; font-size: 16px; font-family: ui-monospace, monospace; color: var(--text); }
+  .cell .idx { font-size: 10px; font-family: ui-monospace, monospace; color: var(--faint); }
+  .cell.sorted .idx { color: #10b981; }
+  .labels { display: flex; margin-top: 4px; }
+  .label { font-size: 10px; font-weight: 600; text-align: center; border-radius: 4px; padding: 2px 0; flex-shrink: 0; }
+  .label.heap { background: #e0e7ff; color: #4f46e5; }
+  .label.sorted { background: #d1fae5; color: var(--emerald); }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 12px; font-size: 11px; color: var(--muted); }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+  .legend .indigo { background: #818cf8; } .legend .emerald { background: #34d399; }
+  .legend .amber { background: #fff; box-shadow: 0 0 0 2px #f59e0b; }
+  .legend .sky { background: #fff; box-shadow: 0 0 0 2px #0ea5e9; }
+  .legend .rose { background: #fff; box-shadow: 0 0 0 2px #f43f5e; }
+
+  #treeSvg { width: 100%; height: auto; max-height: 340px; display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Heapsort (min-heap) — C code &amp; step-by-step simulation</h1>
+    <p class="subtitle">
+      0-indexed min-heap &middot; children of i: 2i+1 and 2i+2 &middot; parent of i: (i&minus;1)/2 &middot;
+      sorts in DESCENDING order &middot; in-place, O(N log N) &middot; step with the buttons or the arrow keys
+    </p>
+  </header>
+
+  <div class="grid">
+    <div class="col">
+      <section class="card">
+        <h2>C implementation</h2>
+        <div id="codePanel" class="code-panel"></div>
+      </section>
+      <section class="card">
+        <h2>Call stack</h2>
+        <div id="callStack"></div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card">
+        <div id="presets" class="presets"></div>
+        <div class="input-row">
+          <input id="customInput" placeholder="custom array, e.g. 7, 2, 9, 4, 3, 8, 6">
+          <button id="applyBtn" class="btn">Apply</button>
+        </div>
+        <p id="err" class="err"></p>
+        <div class="controls">
+          <button id="resetBtn" class="btn">&#8635; Reset</button>
+          <button id="backBtn" class="btn">&#9664; Back</button>
+          <button id="playBtn" class="btn primary">&#9654; Play</button>
+          <button id="fwdBtn" class="btn">Forward &#9654;</button>
+          <select id="speedSel">
+            <option value="1600">0.5&times;</option>
+            <option value="800" selected>1&times;</option>
+            <option value="450">2&times;</option>
+            <option value="220">4&times;</option>
+          </select>
+          <span id="stepCounter" class="step-counter"></span>
+        </div>
+        <input id="scrubber" type="range" min="0" max="0" value="0">
+      </section>
+
+      <section class="card">
+        <div class="tree-head">
+          <h2>Heap as a binary tree</h2>
+          <span id="phaseBadge" class="badge start"></span>
+        </div>
+        <svg id="treeSvg" viewBox="0 0 820 200">
+          <defs>
+            <marker id="hs-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 2 L 8 5 L 0 8 z" fill="#f43f5e"></path>
+            </marker>
+          </defs>
+          <g id="treeContent"></g>
+        </svg>
+      </section>
+
+      <section class="card">
+        <h2>Array h</h2>
+        <div class="scroll"><div id="arrayStrip"></div></div>
+        <div class="legend">
+          <span><span class="sw indigo"></span>heap region</span>
+          <span><span class="sw emerald"></span>sorted suffix</span>
+          <span><span class="sw amber"></span>current position (i)</span>
+          <span><span class="sw sky"></span>children being compared (c)</span>
+          <span><span class="sw rose"></span>swap</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="msg-head">
+          <h2>What is happening</h2>
+          <span id="funcBadge" class="func-badge"></span>
+        </div>
+        <p id="msg" class="msg"></p>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    Complexity: heapify is O(N) (each node is pushed down at most proportional to its height, and most nodes are near the bottom);
+    ordenaHeap performs N&minus;1 extractions, each O(log N) — total O(N log N), in place, not stable.
+    With a min-heap, each extracted minimum is parked at the end of the array, so the result is in descending order;
+    to sort ascending, mirror the comparisons (max-heap) or reverse the array in a final O(N) pass.
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ================= C source (line ids link the trace to the code) ================= */
+
+const FUNCTIONS = [
+  {
+    name: "swap",
+    desc: "helper — exchange two positions",
+    lines: [
+      { text: "void swap (int h[], int a, int b) {" },
+      { text: "    int t = h[a]; h[a] = h[b]; h[b] = t;" },
+      { text: "}" },
+    ],
+  },
+  {
+    name: "bubbleDown",
+    desc: "push one element down until the min-heap condition holds",
+    lines: [
+      { id: "b0", text: "void bubbleDown (int i, int h[], int N) {" },
+      { text: "    /* h[0..N-1] satisfies the min-heap condition except, maybe, at i */" },
+      { id: "b1", text: "    while (2*i + 1 < N) {             /* while i has at least one child */" },
+      { id: "b2", text: "        int c = 2*i + 1;              /* left child */" },
+      { id: "b3", text: "        if (c+1 < N && h[c+1] < h[c])  /* right child exists and is smaller */" },
+      { id: "b4", text: "            c = c + 1;                /* c is now the smallest child */" },
+      { id: "b5", text: "        if (h[i] <= h[c]) break;      /* min-heap condition holds: stop */" },
+      { id: "b6", text: "        swap (h, i, c);               /* exchange parent with smallest child */" },
+      { id: "b7", text: "        i = c;                        /* continue from the child */" },
+      { text: "    }" },
+      { text: "}" },
+    ],
+  },
+  {
+    name: "heapify",
+    desc: "build the min-heap (bottom-up, O(N))",
+    lines: [
+      { id: "f0", text: "void heapify (int v[], int N) {" },
+      { text: "    /* transform v[0..N-1] into a min-heap */" },
+      { id: "f2", text: "    for (int i = N/2 - 1; i >= 0; i--)" },
+      { id: "f3", text: "        bubbleDown (i, v, N);" },
+      { id: "f4", text: "}" },
+    ],
+  },
+  {
+    name: "ordenaHeap",
+    desc: "sort (descending) by repeatedly extracting the minimum",
+    lines: [
+      { id: "o0", text: "void ordenaHeap (int h[], int N) {" },
+      { text: "    /* h[0..N-1] is a min-heap; sort it in DESCENDING order */" },
+      { id: "o2", text: "    while (N > 1) {" },
+      { id: "o3", text: "        swap (h, 0, N-1);              /* minimum goes to its final position */" },
+      { id: "o4", text: "        N = N - 1;                     /* the heap shrinks by one */" },
+      { id: "o5", text: "        bubbleDown (0, h, N);           /* restore the min-heap condition at the root */" },
+      { id: "o6", text: "    }" },
+      { id: "o7", text: "}" },
+    ],
+  },
+  {
+    name: "heapsort",
+    desc: "top function — build the min-heap, then sort",
+    lines: [
+      { id: "s0", text: "void heapsort (int v[], int N) {" },
+      { id: "s1", text: "    heapify (v, N);                  /* phase 1: build the min-heap */" },
+      { id: "s2", text: "    ordenaHeap (v, N);               /* phase 2: extract the minimum repeatedly */" },
+      { text: "    /* result: v[0..N-1] in descending order" },
+      { text: "       (for ascending order, use a max-heap: mirror the comparisons) */" },
+      { id: "s3", text: "}" },
+    ],
+  },
+];
+
+const LINE_ID_TO_FUNC = {};
+FUNCTIONS.forEach(f => f.lines.forEach(l => { if (l.id) LINE_ID_TO_FUNC[l.id] = f.name; }));
+
+/* ================= execution trace generator (mirrors the C code) ================= */
+
+function buildTrace(input) {
+  const arr = input.slice();
+  const N0 = input.length;
+  const steps = [];
+  let frames = [];
+  let phase = "init";
+  let sortedFrom = N0;
+
+  const pushFrame = (name, vars) => frames.push({ name, vars: { ...vars } });
+  const popFrame = () => frames.pop();
+  const setVar = (k, v) => { frames[frames.length - 1].vars[k] = v; };
+  const snapStack = () => frames.map(f => ({ name: f.name, vars: { ...f.vars } }));
+
+  function step(line, msg, hl = {}) {
+    steps.push({ line, phase, stack: snapStack(), arr: arr.slice(), sortedFrom, msg, hl });
+  }
+  const doSwap = (a, b) => { const t = arr[a]; arr[a] = arr[b]; arr[b] = t; };
+
+  function bubbleDown(i, N) {
+    pushFrame("bubbleDown", { i, N });
+    step("b0", "bubbleDown(i=" + i + ", N=" + N + ") — push h[" + i + "] (value " + arr[i] + ") down.", { current: i });
+    for (;;) {
+      const l = 2 * i + 1;
+      if (l >= N) {
+        step("b1", "2*" + i + "+1 = " + l + " is >= N = " + N + ": h[" + i + "] has no children — stop.", { current: i });
+        break;
+      }
+      const kids = l + 1 < N ? [l, l + 1] : [l];
+      step("b1", "2*" + i + "+1 = " + l + " < N = " + N + ": h[" + i + "] has children.", { current: i, compare: kids });
+      let c = l;
+      setVar("c", c);
+      step("b2", "Left child: c = " + c + " (h[" + c + "] = " + arr[c] + ").", { current: i, compare: [c] });
+      if (c + 1 < N && arr[c + 1] < arr[c]) {
+        step("b3", "Right child h[" + (c + 1) + "] = " + arr[c + 1] + " < h[" + c + "] = " + arr[c] + " — take it.", { current: i, compare: [c, c + 1] });
+        c = c + 1;
+        setVar("c", c);
+        step("b4", "c = " + c + ": the smallest child of h[" + i + "] is h[" + c + "] = " + arr[c] + ".", { current: i, compare: [c] });
+      } else if (c + 1 < N) {
+        step("b3", "Right child h[" + (c + 1) + "] = " + arr[c + 1] + " >= h[" + c + "] = " + arr[c] + " — keep the left child.", { current: i, compare: [c, c + 1] });
+      } else {
+        step("b3", "No right child: c = " + c + " is the only child.", { current: i, compare: [c] });
+      }
+      if (arr[i] <= arr[c]) {
+        step("b5", "h[" + i + "] = " + arr[i] + " <= h[" + c + "] = " + arr[c] + ": the min-heap condition holds — stop.", { current: i, compare: [c] });
+        break;
+      }
+      step("b6", "h[" + i + "] = " + arr[i] + " > h[" + c + "] = " + arr[c] + ": swap h[" + i + "] with h[" + c + "].", { current: i, compare: [c], swap: [i, c] });
+      doSwap(i, c);
+      step("b6", "Swapped h[" + i + "] with h[" + c + "].", { current: c, swap: [i, c] });
+      i = c;
+      setVar("i", i);
+      step("b7", "Continue from position i = " + i + ".", { current: i });
+    }
+    popFrame();
+  }
+
+  pushFrame("heapsort", { N: N0 });
+  step("s0", "heapsort — sort the array [" + arr.join(", ") + "] with " + N0 + " elements.");
+  step("s1", "Phase 1: call heapify to build a min-heap.");
+
+  phase = "heapify";
+  pushFrame("heapify", { N: N0 });
+  step("f0", "heapify — build a min-heap bottom-up (the smallest element ends up at the root).");
+  const start = Math.floor(N0 / 2) - 1;
+  setVar("i", start);
+  step("f2", "Start from the last parent: i = N/2 - 1 = " + start + ".");
+  for (let i = start; i >= 0; i--) {
+    setVar("i", i);
+    step("f3", "Call bubbleDown(" + i + ", v, " + N0 + ") — push h[" + i + "] down.");
+    bubbleDown(i, N0);
+    if (i > 0) step("f2", "i--: next parent is i = " + (i - 1) + ".");
+  }
+  step("f4", "heapify done: h is now a min-heap (h[0] = " + arr[0] + " is the minimum).");
+  popFrame();
+
+  step("s2", "Phase 2: call ordenaHeap to extract the minimum repeatedly.");
+
+  phase = "sort";
+  pushFrame("ordenaHeap", { N: N0 });
+  step("o0", "ordenaHeap — repeatedly move the root (the minimum) to the sorted suffix.");
+  let N = N0;
+  for (;;) {
+    if (N <= 1) {
+      step("o2", "N = " + N + ": a single element is always in place — done.");
+      break;
+    }
+    step("o2", "N = " + N + " > 1: continue.", { current: 0 });
+    step("o3", "Swap the root h[0] = " + arr[0] + " (the minimum) with h[" + (N - 1) + "] = " + arr[N - 1] + " — it reaches its final position at the end of the array.", { swap: [0, N - 1] });
+    doSwap(0, N - 1);
+    sortedFrom = N - 1;
+    step("o3", "h[" + (N - 1) + "] = " + arr[N - 1] + " is now in its final position (the sorted suffix grows from right to left).", { swap: [0, N - 1] });
+    N = N - 1;
+    setVar("N", N);
+    step("o4", "Shrink the heap: N = " + N + ". The sorted suffix is h[" + N + ".." + (N0 - 1) + "].");
+    step("o5", "Call bubbleDown(0, h, " + N + ") — restore the min-heap condition at the root.");
+    bubbleDown(0, N);
+  }
+  step("o7", "ordenaHeap finished: the array is sorted in descending order.");
+  popFrame();
+
+  phase = "done";
+  sortedFrom = 0;
+  step("s3", "heapsort finished — the array is sorted in descending order!");
+  popFrame();
+  return steps;
+}
+
+/* ================= sample arrays & input parsing ================= */
+
+const PRESETS = [
+  { label: "Random 7", arr: [7, 2, 9, 4, 3, 8, 6] },
+  { label: "Random 10", arr: [4, 9, 2, 7, 5, 11, 1, 8, 3, 10] },
+  { label: "Input ascending", arr: [1, 2, 3, 4, 5, 6, 7] },
+  { label: "Input descending", arr: [7, 6, 5, 4, 3, 2, 1] },
+  { label: "With duplicates", arr: [5, 2, 5, 8, 2, 9, 1] },
+];
+
+function parseInput(s) {
+  const nums = s.split(/[,;\s]+/).filter(Boolean).map(Number);
+  if (nums.length < 2 || nums.length > 12) return null;
+  if (nums.some(n => !Number.isInteger(n) || Math.abs(n) > 999)) return null;
+  return nums;
+}
+
+/* ================= C syntax highlighting ================= */
+
+const KEYWORDS = new Set(["void", "int", "while", "if", "else", "for", "break", "return", "const"]);
+const TOKEN_CLS = { cmt: "cmt", kw: "kw", fn: "fn", num: "num", id: "id", sym: "sym", ws: null };
+
+function highlightC(text) {
+  const tokens = [];
+  const re = /(\/\*.*?\*\/)|(\d+)|([A-Za-z_]\w*)|(\s+)|(.)/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    tokens.push({ t: m[0], k: m[1] ? "cmt" : m[2] ? "num" : m[3] ? "id" : m[4] ? "ws" : "sym" });
+  }
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].k === "id") {
+      if (KEYWORDS.has(tokens[i].t)) { tokens[i].k = "kw"; continue; }
+      let j = i + 1;
+      while (j < tokens.length && tokens[j].k === "ws") j++;
+      if (tokens[j] && tokens[j].t === "(") tokens[i].k = "fn";
+    }
+  }
+  return tokens;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function highlightHTML(text) {
+  return highlightC(text).map(tk => {
+    const esc = escapeHtml(tk.t);
+    return TOKEN_CLS[tk.k] ? '<span class="' + TOKEN_CLS[tk.k] + '">' + esc + "</span>" : esc;
+  }).join("");
+}
+
+/* ================= heap tree geometry ================= */
+
+const W = 820, TOP = 58, LH = 92, R = 25;
+const px = i => { const d = Math.floor(Math.log2(i + 1)); const base = Math.pow(2, d); return (W * (i + 1.5 - base)) / base; };
+const py = i => TOP + Math.floor(Math.log2(i + 1)) * LH;
+
+function ringOf(i, hl) {
+  if (hl.swap && (hl.swap[0] === i || hl.swap[1] === i)) return "#f43f5e";
+  if (hl.current === i) return "#f59e0b";
+  if (hl.compare && hl.compare.includes(i)) return "#0ea5e9";
+  return null;
+}
+
+const PHASE_INFO = {
+  init: { label: "Start", cls: "start" },
+  heapify: { label: "Phase 1 · heapify — build the min-heap", cls: "heapify" },
+  sort: { label: "Phase 2 · ordenaHeap — extract the minimum", cls: "sort" },
+  done: { label: "Sorted (descending)", cls: "done" },
+};
+
+/* ==================== DOM ==================== */
+
+const CELL = 44, GAP = 6;
+const stripW = n => (n > 0 ? n * CELL + (n - 1) * GAP : 0);
+
+let steps = [];
+let idx = 0;
+let playing = false;
+let speed = 800;
+let timer = null;
+let lineEls = {};
+
+const $ = id => document.getElementById(id);
+
+function buildCodePanel() {
+  const panel = $("codePanel");
+  let lineNo = 0;
+  FUNCTIONS.forEach(f => {
+    const block = document.createElement("div");
+    block.className = "code-block";
+    const head = document.createElement("div");
+    head.className = "code-block-head";
+    head.innerHTML = '<span class="fn-name"></span><span class="fn-desc"></span>';
+    head.children[0].textContent = f.name;
+    head.children[1].textContent = f.desc;
+    block.appendChild(head);
+    f.lines.forEach(l => {
+      lineNo++;
+      const row = document.createElement("div");
+      row.className = "code-line";
+      row.innerHTML = '<span class="ln"></span><code class="code-text"></code>';
+      row.children[0].textContent = String(lineNo);
+      row.children[1].innerHTML = highlightHTML(l.text);
+      if (l.id) lineEls[l.id] = row;
+      block.appendChild(row);
+    });
+    panel.appendChild(block);
+  });
+}
+
+function buildPresets() {
+  const box = $("presets");
+  const label = document.createElement("span");
+  label.className = "presets-label";
+  label.textContent = "Samples:";
+  box.appendChild(label);
+  PRESETS.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = p.label;
+    b.addEventListener("click", () => apply(p.arr));
+    box.appendChild(b);
+  });
+}
+
+function renderTree(arr, sortedFrom, hl) {
+  const N = arr.length;
+  let dmax = 0;
+  for (let i = 0; i < N; i++) dmax = Math.max(dmax, Math.floor(Math.log2(i + 1)));
+  const H = TOP + dmax * LH + 70;
+  const svg = $("treeSvg");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+  let s = "";
+  for (let i = 1; i < N; i++) {
+    const p = (i - 1) >> 1;
+    s += '<line x1="' + px(p) + '" y1="' + py(p) + '" x2="' + px(i) + '" y2="' + py(i) +
+         '" stroke="' + (i >= sortedFrom ? "#6ee7b7" : "#cbd5e1") + '" stroke-width="2"></line>';
+  }
+  if (hl.swap && hl.swap[0] !== hl.swap[1]) {
+    s += '<line x1="' + px(hl.swap[0]) + '" y1="' + py(hl.swap[0]) + '" x2="' + px(hl.swap[1]) + '" y2="' + py(hl.swap[1]) +
+         '" stroke="#f43f5e" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#hs-arrow)" marker-start="url(#hs-arrow)" opacity="0.9"></line>';
+  }
+  for (let i = 0; i < N; i++) {
+    const v = arr[i];
+    const sorted = i >= sortedFrom;
+    const ring = ringOf(i, hl);
+    s += '<g transform="translate(' + px(i) + "," + py(i) + ')">';
+    if (ring) s += '<circle r="' + (R + 6) + '" fill="none" stroke="' + ring + '" stroke-width="3"></circle>';
+    s += '<circle r="' + R + '" fill="' + (sorted ? "#34d399" : "#6366f1") + '" stroke="' + (sorted ? "#059669" : "#4f46e5") + '" stroke-width="2"></circle>';
+    s += '<text text-anchor="middle" dy="0.35em" fill="#ffffff" font-size="' + (Math.abs(v) > 99 ? 11 : 14) + '" font-weight="700" font-family="ui-monospace, monospace">' + v + "</text>";
+    s += '<text text-anchor="middle" y="' + (-R - 8) + '" fill="#94a3b8" font-size="10" font-family="ui-monospace, monospace">' + i + "</text>";
+    if (sorted) s += '<text text-anchor="middle" y="' + (R + 16) + '" fill="#059669" font-size="10" font-weight="600">sorted</text>';
+    s += "</g>";
+  }
+  $("treeContent").innerHTML = s;
+}
+
+function renderArray(arr, sortedFrom, hl) {
+  const N = arr.length;
+  let cells = "";
+  for (let i = 0; i < N; i++) {
+    const sorted = i >= sortedFrom;
+    let ringCls = "";
+    if (hl.swap && hl.swap.includes(i)) ringCls = " swp";
+    else if (hl.current === i) ringCls = " cur";
+    else if (hl.compare && hl.compare.includes(i)) ringCls = " cmp";
+    cells += '<div class="cell ' + (sorted ? "sorted" : "heap") + ringCls + '" style="width:' + CELL + 'px">' +
+             '<div class="val">' + arr[i] + '</div><div class="idx">' + i + "</div></div>";
+  }
+  let labels = "";
+  if (sortedFrom > 0) {
+    labels += '<div class="label heap" style="width:' + stripW(sortedFrom) + 'px">heap (min-heap, unordered)</div>';
+  }
+  if (sortedFrom < N) {
+    labels += '<div class="label sorted" style="width:' + stripW(N - sortedFrom) + 'px">sorted suffix — descending (final positions)</div>';
+  }
+  $("arrayStrip").innerHTML =
+    '<div class="cells" style="gap:' + GAP + 'px">' + cells + "</div>" +
+    '<div class="labels" style="gap:' + GAP + 'px">' + labels + "</div>";
+}
+
+function renderStack(stack) {
+  const rev = stack.slice().reverse();
+  const box = $("callStack");
+  box.innerHTML = "";
+  rev.forEach((f, n) => {
+    const row = document.createElement("div");
+    row.className = "frame" + (n === 0 ? " top" : "");
+    const nm = document.createElement("span");
+    nm.className = "fname";
+    nm.textContent = f.name;
+    const sp = document.createElement("span");
+    sp.className = "spacer";
+    row.appendChild(nm);
+    row.appendChild(sp);
+    Object.entries(f.vars).forEach(([k, v]) => {
+      const chip = document.createElement("span");
+      chip.className = "var";
+      chip.textContent = k + " = " + v;
+      row.appendChild(chip);
+    });
+    box.appendChild(row);
+  });
+  const hint = document.createElement("p");
+  hint.className = "hint";
+  hint.textContent = rev.length > 0 ? "innermost frame on top" : "no active calls";
+  box.appendChild(hint);
+}
+
+function render() {
+  const st = steps[idx];
+  const last = steps.length - 1;
+  const sortedFrom = st.phase === "done" ? 0 : st.sortedFrom;
+
+  Object.values(lineEls).forEach(el => el.classList.remove("active"));
+  if (st.line && lineEls[st.line]) {
+    const el = lineEls[st.line];
+    el.classList.add("active");
+    const panel = $("codePanel");
+    const top = el.offsetTop;
+    if (top < panel.scrollTop + 30 || top > panel.scrollTop + panel.clientHeight - 60) {
+      panel.scrollTop = top - panel.clientHeight / 2 + 20;
+    }
+  }
+
+  renderStack(st.stack);
+  renderTree(st.arr, sortedFrom, st.hl);
+  renderArray(st.arr, sortedFrom, st.hl);
+
+  const p = PHASE_INFO[st.phase];
+  const badge = $("phaseBadge");
+  badge.textContent = p.label;
+  badge.className = "badge " + p.cls;
+
+  $("msg").textContent = st.msg;
+  const fb = $("funcBadge");
+  if (st.line) { fb.style.display = ""; fb.textContent = "in " + LINE_ID_TO_FUNC[st.line]; }
+  else fb.style.display = "none";
+
+  $("backBtn").disabled = idx === 0;
+  $("fwdBtn").disabled = idx >= last;
+  $("scrubber").max = last;
+  $("scrubber").value = idx;
+  $("stepCounter").textContent = "step " + (idx + 1) + " / " + steps.length;
+  $("playBtn").innerHTML = playing ? "&#10074;&#10074; Pause" : "&#9654; Play";
+}
+
+function stopTimer() { if (timer) { clearTimeout(timer); timer = null; } }
+
+function tick() {
+  if (!playing) return;
+  if (idx >= steps.length - 1) { playing = false; render(); return; }
+  idx++;
+  render();
+  timer = setTimeout(tick, speed);
+}
+
+function setPlaying(p) {
+  playing = p;
+  if (!p) stopTimer();
+  render();
+  if (p) tick();
+}
+
+function apply(list, text) {
+  const parsed = list || parseInput(text != null ? text : $("customInput").value);
+  if (!parsed) { $("err").textContent = "Enter between 2 and 12 integers (values up to 999)."; return; }
+  $("err").textContent = "";
+  $("customInput").value = parsed.join(", ");
+  steps = buildTrace(parsed);
+  idx = 0;
+  setPlaying(false);
+}
+
+function prev() { setPlaying(false); if (idx > 0) { idx--; render(); } }
+function next() { setPlaying(false); if (idx < steps.length - 1) { idx++; render(); } }
+function reset() { setPlaying(false); idx = 0; render(); }
+
+document.addEventListener("DOMContentLoaded", () => {
+  buildCodePanel();
+  buildPresets();
+
+  steps = buildTrace(PRESETS[0].arr);
+  $("customInput").value = PRESETS[0].arr.join(", ");
+
+  $("applyBtn").addEventListener("click", () => apply());
+  $("customInput").addEventListener("keydown", e => { if (e.key === "Enter") apply(); });
+  $("resetBtn").addEventListener("click", reset);
+  $("backBtn").addEventListener("click", prev);
+  $("fwdBtn").addEventListener("click", next);
+  $("playBtn").addEventListener("click", () => { if (idx >= steps.length - 1) idx = 0; setPlaying(!playing); });
+  $("speedSel").addEventListener("change", e => { speed = Number(e.target.value); });
+  $("scrubber").addEventListener("input", e => { setPlaying(false); idx = Number(e.target.value); render(); });
+
+  window.addEventListener("keydown", e => {
+    const t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
+    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+    else if (e.key === " ") { e.preventDefault(); setPlaying(!playing); }
+  });
+
+  render();
+});
+</script>
+
+</body>
+</html>
