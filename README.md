@@ -76,7 +76,7 @@ O exame de recurso será no dia 28 Jan.
 * [Insertion Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/fbcsgi7dndexom0u0kib8/Insertion-Sort-Visualization.html?rlkey=3vikcccchnhf13mmhs8l1egbd&dl=0)
 * [Merge Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/kft2rm3rlm46p2jasooeq/Merge-Sort-Visualization.html?rlkey=eyr2plxlos78veqp736q94uaq&dl=0)
 * [Counting Sort — passo a passo](https://www.dropbox.com/scl/fi/bd9cjdfpvm2iz52nfcn2o/Counting-Sort-Animation.html?rlkey=rum4rj8057nlgb7zh6p44kc9z&dl=0)
-* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](https://www.dropbox.com/scl/fi/sd1mojk0o2d1d49wemfye/Towers-of-Hanoi-Animation.html?rlkey=unc07j88rzzkx3zgxgtb961ip&dl=0)
+* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](https://www.dropbox.com/scl/fi/ipq5coxglq28w52eq971v/Towers-of-Hanoi-Animation.html?rlkey=ytmxdyrtqxyddg48ygru8m5co&dl=0)
 
 ### Notas JBB
 
