@@ -31,8 +31,8 @@ caso, pior caso, e caso médio; análise amortizada; casos de estudo.
 | 19.Out a 23.Out  | [Ficha 2 (Recorrências)](./pdfs/ficha2tp.pdf)              | Análise amortizada                                                 |
 | 26.Out a 29.Out  | [Ficha 2 (Caso médio)](./pdfs/ficha2tp.pdf)              | Revisões |
 | 02.Nov a 06.Nov  | [Ficha 2 (análise amortizada)](./pdfs/ficha2tp.pdf)  | Estruturas de dados para representar dicionários: tabelas de Hash  |
-| 09.Nov a 13.Nov    |  [Ficha 3 (Hash)](./pdfs/ficha3tp.pdf)                 | Árvores AVL: motivação e algoritmo de inserção balanceada           |
-| 16.Nov a 20.Nov  |                      | Grafos: representações e funções de consulta                       |
+| 09.Nov a 13.Nov    |  [Ficha 3 (Heaps)](./pdfs/ficha3tp.pdf)                 | Árvores AVL: motivação e algoritmo de inserção balanceada           |
+| 16.Nov a 20.Nov  | [Ficha 3 (Hash)](./pdfs/ficha3tp.pdf)                      | Grafos: representações e funções de consulta                       |
 | 23.Nov a 27.Nov  |   | Grafos: travessias                                                 |
 | 30.Dez a 04.Dez    |       | Grafos pesados: algoritmo de Dijkstra, Prim e Floyd Warshal        |
 | 8.Dez a 12.Dez   |    | Revisões                                                                   |
