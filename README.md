@@ -4,7 +4,7 @@ Esta unidade curricular visa tornar os estudantes aptos a analisar algoritmos
 do ponto de vista da sua correcção e tempo de execução. Visa também tornar os
 estudantes proficientes na utilização de estruturas de dados avançadas, por
 exemplo grafos. A UC introduz ainda conceitos elementares de complexidade
-algorítmica, tais como a noção do problema NP-completo.
+algorítmica, tais como a noção de problema NP-completo.
 
 1. Introdução à análise de correção de algoritmos: pré e pós-condições;
    invariantes de ciclo; anotação de programas.
@@ -66,6 +66,18 @@ O exame de recurso será no dia 28 Jan.
 
 * [C1. Especificação e Correcção de Algoritmos](https://www.dropbox.com/scl/fi/si8rl0wnpramf3k140jp3/C1.-Especifica-o-e-Correc-o-de-Algoritmos.pdf?rlkey=c8gwl9aiax8j5xsowtv4f96o4&dl=0)
 * [C2. Correção de Algoritmos com Ciclos](https://www.dropbox.com/scl/fi/9ggkdd9cz79olsgdz9enr/C2.-Correc-o-de-Algoritmos-com-Ciclos.pdf?rlkey=2ilvstmmtyxpgij6v6inttbs5&dl=0)
+* [T1. Tempo de Execução de Algoritmos Iterativos](https://www.dropbox.com/scl/fi/argncz6lpdxaiaqjhfgjy/T1.-Tempo-de-Execu-o-de-Algoritmos-Iterativos.pdf?rlkey=khrabx7fvoi0qddpuqch29cpz&dl=0)
+* [T2. Análise de Pior Caso, Melhor Caso, e Caso Médio](https://www.dropbox.com/scl/fi/591mxg2l7oqa2kss18gnf/T2.-An-lise-de-Pior-Caso-Melhor-Caso-e-Caso-M-dio.pdf?rlkey=5tg2lbtp1s6i47o6lr9i8gq2p&dl=0)
+* [T3. Análise do Tempo de Execução de Algoritmos Recursivos](https://www.dropbox.com/scl/fi/y87bwutsgugvfxlfkqtla/T3.-An-lise-do-Tempo-de-Execu-o-de-Algoritmos-Recursivos.pdf?rlkey=ex346xkdfb6rn9o50uclvs12w&dl=0)
+* [T4. Tópicos sobre Algoritmos de Ordenação](https://www.dropbox.com/scl/fi/ykk6oth6h8yyxlai8pdvf/T4.-T-picos-sobre-Algoritmos-de-Ordena-o.pdf?rlkey=8cmq1f9voiyximwzx5slyugue&dl=0)
+* [T5. Análise Amortizada de Algoritmos](https://www.dropbox.com/scl/fi/qsh8pm4p6jwfs2vug649z/T5.-An-lise-Amortizada-de-Algoritmos.pdf?rlkey=ufnz5djb13jepxn19hugjrh80&dl=0)
+
+### Animações
+
+* [Insertion Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/fbcsgi7dndexom0u0kib8/Insertion-Sort-Visualization.html?rlkey=3vikcccchnhf13mmhs8l1egbd&dl=0)
+* [Merge Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/kft2rm3rlm46p2jasooeq/Merge-Sort-Visualization.html?rlkey=eyr2plxlos78veqp736q94uaq&dl=0)
+* [Counting Sort — passo a passo](https://www.dropbox.com/scl/fi/bd9cjdfpvm2iz52nfcn2o/Counting-Sort-Animation.html?rlkey=rum4rj8057nlgb7zh6p44kc9z&dl=0)
+* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](https://www.dropbox.com/scl/fi/ipq5coxglq28w52eq971v/Towers-of-Hanoi-Animation.html?rlkey=ytmxdyrtqxyddg48ygru8m5co&dl=0)
 
 ### Notas JBB
 
