@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Counting Sort — Animated</title>
+<style>
+  :root { font-family: system-ui, sans-serif; color: #111827; background: #f8fafc; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: #64748b; font-size: .9rem; margin-bottom: 16px; }
+  .panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .row { display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap; min-height: 110px; }
+  .cell { width: 42px; text-align: center; position: relative; transition: transform .25s, background .25s; }
+  .val { height: 38px; line-height: 38px; border-radius: 8px; background: #e2e8f0; font-weight: 600; margin-top: 26px; }
+  .idx { font-size: .7rem; color: #94a3b8; margin-top: 3px; }
+  .tag { position: absolute; top: 0; left: 0; right: 0; font-size: .7rem; color: #475569; font-weight: 600; }
+  .active .val { background: #fbbf24; transform: translateY(-4px); }
+  .placed .val { background: #34d399; }
+  .label { font-size: .8rem; font-weight: 700; color: #334155; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .04em; }
+  .narr { min-height: 44px; font-size: .95rem; color: #1e293b; }
+  .narr b { color: #d97706; }
+  .ctrl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  button { border: 0; background: #0ea5e9; color: #fff; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  button:hover { background: #0284c7; }
+  button.sec { background: #e2e8f0; color: #334155; }
+  input[type=range] { width: 120px; }
+  .phase { display:inline-block; padding: 2px 10px; border-radius: 999px; font-size: .75rem; font-weight: 700; background: #e0e7ff; color: #3730a3; margin-bottom: 10px; }
+  .barwrap { display:flex; align-items:flex-end; gap:6px; height:100px; }
+  .bar { flex:0 0 42px; display:flex; flex-direction:column; justify-content:flex-end; height:100%; }
+  .fill { background:#93c5fd; border-radius:4px 4px 0 0; transition: height .3s; }
+  .bar.hi .fill { background: #f59e0b; }
+  .bar.counted .fill { background: #3b82f6; }
+  .bar .num { font-size:.75rem; text-align:center; color:#334155; font-weight:600; }
+</style>
+</head>
+<body>
+<h1>Counting Sort — step by step</h1>
+<div class="sub">Keys are small non-negative integers: sort by counting occurrences, not by comparing.</div>
+
+<div class="panel">
+  <span class="phase" id="phase">Setup</span>
+  <div class="narr" id="narr"></div>
+</div>
+
+<div class="panel">
+  <div class="label">Input array A</div>
+  <div class="row" id="inputRow"></div>
+</div>
+
+<div class="panel">
+  <div class="label">Count array C (occurrences of each key)</div>
+  <div class="barwrap" id="countRow"></div>
+</div>
+
+<div class="panel">
+  <div class="label">Output array B (sorted)</div>
+  <div class="row" id="outputRow"></div>
+</div>
+
+<div class="panel ctrl">
+  <button id="playBtn">▶ Play</button>
+  <button id="stepBtn" class="sec">Step</button>
+  <button id="resetBtn" class="sec">Reset</button>
+  <label>Speed <input type="range" id="speed" min="200" max="2000" value="900" step="100" /></label>
+  <button id="randBtn" class="sec">New random array</button>
+</div>
+
+<script>
+const MAXKEY = 9;
+let A = [4, 2, 7, 1, 4, 7, 0, 2, 5, 3];
+let steps = [];
+let i = 0, playing = false, timer = null, speed = 900;
+
+const $ = id => document.getElementById(id);
+
+function buildStepList(A){
+  const st = [];
+  const n = A.length;
+  const C = new Array(MAXKEY+1).fill(0);
+  const B = new Array(n).fill(null);
+  st.push({phase:"Phase 0 — Setup", narr:`We will sort <b>A = [${A.join(", ")}]</b>. Keys range from 0 to ${MAXKEY}, so we allocate a count array <b>C[0..${MAXKEY}]</b> (all zeros) and an empty output array <b>B</b>.`, counts:[...C], out:[...B], scan:-1});
+  st.push({phase:"Phase 1 — Count", narr:"Pass 1: scan A once. For each value <b>v</b>, increment <b>C[v]</b>. Each element of A is touched exactly once.", counts:[...C], out:[...B], scan:0});
+  for(let k=0;k<n;k++){
+    const v = A[k];
+    C[v]++;
+    st.push({phase:"Phase 1 — Count", narr:`A[${k}] = <b>${v}</b> → increment C[${v}]. Now C[${v}] = <b>${C[v]}</b>.`, counts:[...C], out:[...B], scan:k, hi:v});
+  }
+  st.push({phase:"Phase 2 — Prefix sums", narr:"Convert C into a <b>prefix-sum</b> array: C[v] will hold the number of elements ≤ v — the rightmost output position for value v.", counts:[...C], out:[...B], scan:-1});
+  for(let v=1;v<=MAXKEY;v++){
+    C[v]+=C[v-1];
+    st.push({phase:"Phase 2 — Prefix sums", narr:`C[${v}] += C[${v-1}] → C[${v}] = <b>${C[v]}</b>: exactly ${C[v]} element(s) of A are ≤ ${v}.`, counts:[...C], out:[...B], scan:-1, hi:v});
+  }
+  st.push({phase:"Phase 3 — Place", narr:"Pass 2: scan A <b>from right to left</b> (this keeps the sort <b>stable</b>). Each element goes straight to its final slot <b>B[C[v]−1]</b>, then C[v] is decremented.", counts:[...C], out:[...B], scan:n-1});
+  for(let k=n-1;k>=0;k--){
+    const v = A[k];
+    C[v]--;
+    B[C[v]] = v;
+    st.push({phase:"Phase 3 — Place", narr:`A[${k}] = <b>${v}</b> → place it at B[<b>${C[v]}</b>]. Decrement C[${v}] → ${C[v]}.`, counts:[...C], out:[...B], scan:k, hi:v, placed:C[v]});
+  }
+  st.push({phase:"Done", narr:`B = <b>[${B.join(", ")}]</b> — sorted in O(n + k) time with <b>zero comparisons</b>. 🎉`, counts:[...C], out:[...B], scan:-1});
+  return st;
+}
+
+function render(s){
+  $("phase").textContent = s.phase;
+  $("narr").innerHTML = s.narr;
+  $("inputRow").innerHTML = A.map((v,k)=>{
+    const cls = k===s.scan ? "cell active" : "cell";
+    return `<div class="${cls}"><div class="tag">${k===s.scan?"▲":""}</div><div class="val">${v}</div><div class="idx">${k}</div></div>`;
+  }).join("");
+  const maxC = Math.max(1,...s.counts);
+  $("countRow").innerHTML = s.counts.map((c,v)=>{
+    const h = (c/maxC)*60;
+    const cls = "bar" + (v===s.hi?" hi":"");
+    return `<div class="${cls}"><div class="num">${c}</div><div class="fill" style="height:${h}px"></div><div class="idx">${v}</div></div>`;
+  }).join("");
+  $("outputRow").innerHTML = s.out.map((v,k)=>{
+    const cls = k===s.placed ? "cell placed" : "cell";
+    return `<div class="${cls}"><div class="tag">${k===s.placed?"←":""}</div><div class="val">${v===null?"":v}</div><div class="idx">${k}</div></div>`;
+  }).join("");
+}
+
+function stop(){ playing=false; clearInterval(timer); $("playBtn").textContent="▶ Play"; }
+function step(){ if(i<steps.length-1){ i++; render(steps[i]); } else { stop(); } }
+function play(){
+  if(playing){ stop(); return; }
+  if(i>=steps.length-1){ i=-1; }
+  playing = true; $("playBtn").textContent = "⏸ Pause";
+  timer = setInterval(step, 2200-speed);
+  step();
+}
+function reset(){ stop(); i = 0; steps = buildStepList(A); render(steps[0]); }
+
+$("playBtn").onclick = play;
+$("stepBtn").onclick = ()=>{ stop(); step(); };
+$("resetBtn").onclick = reset;
+$("speed").oninput = e => { speed = +e.target.value; if(playing){ stop(); play(); } };
+$("randBtn").onclick = ()=>{
+  A = Array.from({length:10},()=>Math.floor(Math.random()*(MAXKEY+1)));
+  reset();
+};
+
+reset();
+</script>
+</body>
+</html>
