@@ -72,6 +72,7 @@ O exame de recurso será no dia 28 Jan.
 * [T4. Tópicos sobre Algoritmos de Ordenação](https://www.dropbox.com/scl/fi/ykk6oth6h8yyxlai8pdvf/T4.-T-picos-sobre-Algoritmos-de-Ordena-o.pdf?rlkey=8cmq1f9voiyximwzx5slyugue&dl=0)
 * [T5. Análise Amortizada de Algoritmos](https://www.dropbox.com/scl/fi/qsh8pm4p6jwfs2vug649z/T5.-An-lise-Amortizada-de-Algoritmos.pdf?rlkey=ufnz5djb13jepxn19hugjrh80&dl=0)
 * [ED3. Árvores AVL](https://www.dropbox.com/scl/fi/8ajurvpkso5yg968dyzia/ED3.-rvores-AVL.pdf?rlkey=uqodvka76kvkx3nf1l4gbp3tg&dl=0)
+* [ED4. Tabelas de “hash”](https://www.dropbox.com/scl/fi/rcrbfjvl15pcexiwke80v/ED4.-Tabelas-de-hash.pdf?rlkey=hxxekhsai5z9hom7r1n6cjmh6&dl=0)
 
 ### Animações
 
