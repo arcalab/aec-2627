@@ -80,6 +80,7 @@ O exame de recurso será no dia 28 Jan.
 * [Merge Sort e a sua árvore de decisão](./anims/merge-sort.html)
 * [Counting Sort — passo a passo](./anims/counting-sort.html)
 * [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](./anims/towers-of-hanoi.html)
+* [Heapsort — passo a passo (min-heap)](./anims/heapsort.html)
 
 ### Notas JBB
 
