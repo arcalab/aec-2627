@@ -47,6 +47,7 @@ O exame de recurso será no dia 28 Jan.
  
 # Testes e exames anteriores
 
+* [Teste 1 26-27](./pdfs/teste1_2627.pdf) e [resolução não validada do chatGPT](./pdfs/resolucao_gpt.pdf)
 * [Exame 25-26](./pdfs/exame2526.pdf)
 * [Teste 2 25-26](./pdfs/teste2_2526.pdf)
 * [Teste 1 25-26](./pdfs/teste1_2526.pdf)
