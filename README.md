@@ -29,13 +29,13 @@ caso, pior caso, e caso médio; análise amortizada; casos de estudo.
 | 05.Out a 09.Out   |  [Ficha 1 (Correcção)](./pdfs/ficha1tp.pdf)               | Introdução à análise de complexidade. Tamanho do input. Melhor e pior casos. Caso médio. |
 | 12.Out a 16.Out  | [Ficha 2 (Contagem)](./pdfs/ficha2tp.pdf)                  | Análise de definições recursivas. Relações de recorrência. Complexidade de algoritmos de ordenação. |
 | 19.Out a 23.Out  | [Ficha 2 (Recorrências)](./pdfs/ficha2tp.pdf)              | Análise amortizada                                                 |
-| 26.Out a 29.Out  | [Ficha 2 (Caso médio / análise amortizada)](./pdfs/ficha2tp.pdf)              | Revisões |
-| 02.Nov a 06.Nov  | [Ficha 3 (Heaps)](./pdfs/ficha3tp.pdf)  | Estruturas de dados para representar dicionários: tabelas de Hash  |
-| 09.Nov a 13.Nov    |  [Ficha 3 (Hash)](./pdfs/ficha3tp.pdf)                 | Árvores AVL: motivação e algoritmo de inserção balanceada           |
-| 16.Nov a 20.Nov  |                      | Grafos: representações e funções de consulta                       |
-| 23.Nov a 27.Nov  |   | Grafos: travessias                                                 |
-| 30.Dez a 04.Dez    |       | Grafos pesados: algoritmo de Dijkstra, Prim e Floyd Warshal        |
-| 8.Dez a 12.Dez   |    | Revisões                                                                   |
+| 26.Out a 29.Out  | [Ficha 2 (Caso médio)](./pdfs/ficha2tp.pdf)              | Revisões |
+| 02.Nov a 06.Nov  | [Ficha 2 (análise amortizada)](./pdfs/ficha2tp.pdf)  | Árvores AVL: motivação e algoritmo de inserção balanceada  |
+| 09.Nov a 13.Nov    |  [Ficha 3 (Heaps)](./pdfs/ficha3tp.pdf)                 | Estruturas de dados para representar dicionários: tabelas de Hash  |
+| 16.Nov a 20.Nov  | [Ficha 3 (Hash)](./pdfs/ficha3tp.pdf)                      | Grafos: representações e funções de consulta                       |
+| 23.Nov a 27.Nov  | [Ficha 4 (Grafos)](./pdfs/Ficha4.pdf)   | Grafos: travessias                                                 |
+| 30.Nov a 04.Dez    | [Ficha 4 (Grafos)](./pdfs/Ficha4.pdf)       | Grafos pesados: algoritmo de Dijkstra, Prim e Floyd Warshal        |
+| 8.Dez a 12.Dez   | [Ficha 4 (Grafos)](./pdfs/Ficha4.pdf)   | Revisões                                                                   |
 
 # Avaliação
 
@@ -72,13 +72,16 @@ O exame de recurso será no dia 28 Jan.
 * [T3. Análise do Tempo de Execução de Algoritmos Recursivos](https://www.dropbox.com/scl/fi/y87bwutsgugvfxlfkqtla/T3.-An-lise-do-Tempo-de-Execu-o-de-Algoritmos-Recursivos.pdf?rlkey=ex346xkdfb6rn9o50uclvs12w&dl=0)
 * [T4. Tópicos sobre Algoritmos de Ordenação](https://www.dropbox.com/scl/fi/ykk6oth6h8yyxlai8pdvf/T4.-T-picos-sobre-Algoritmos-de-Ordena-o.pdf?rlkey=8cmq1f9voiyximwzx5slyugue&dl=0)
 * [T5. Análise Amortizada de Algoritmos](https://www.dropbox.com/scl/fi/qsh8pm4p6jwfs2vug649z/T5.-An-lise-Amortizada-de-Algoritmos.pdf?rlkey=ufnz5djb13jepxn19hugjrh80&dl=0)
+* [ED3. Árvores AVL](https://www.dropbox.com/scl/fi/8ajurvpkso5yg968dyzia/ED3.-rvores-AVL.pdf?rlkey=uqodvka76kvkx3nf1l4gbp3tg&dl=0)
+* [ED4. Tabelas de “hash”](https://www.dropbox.com/scl/fi/rcrbfjvl15pcexiwke80v/ED4.-Tabelas-de-hash.pdf?rlkey=hxxekhsai5z9hom7r1n6cjmh6&dl=0)
 
 ### Animações
 
-* [Insertion Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/fbcsgi7dndexom0u0kib8/Insertion-Sort-Visualization.html?rlkey=3vikcccchnhf13mmhs8l1egbd&dl=0)
-* [Merge Sort e a sua árvore de decisão](https://www.dropbox.com/scl/fi/kft2rm3rlm46p2jasooeq/Merge-Sort-Visualization.html?rlkey=eyr2plxlos78veqp736q94uaq&dl=0)
-* [Counting Sort — passo a passo](https://www.dropbox.com/scl/fi/bd9cjdfpvm2iz52nfcn2o/Counting-Sort-Animation.html?rlkey=rum4rj8057nlgb7zh6p44kc9z&dl=0)
-* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](https://www.dropbox.com/scl/fi/ipq5coxglq28w52eq971v/Towers-of-Hanoi-Animation.html?rlkey=ytmxdyrtqxyddg48ygru8m5co&dl=0)
+* [Insertion Sort e a sua árvore de decisão](./anims/insertion-sort.html)
+* [Merge Sort e a sua árvore de decisão](./anims/merge-sort.html)
+* [Counting Sort — passo a passo](./anims/counting-sort.html)
+* [Torres de Hanói — 4 discos, solução óptima em 15 movimentos](./anims/towers-of-hanoi.html)
+* [Heapsort — passo a passo (min-heap)](./anims/heapsort.html)
 
 ### Notas JBB
 
