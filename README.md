@@ -74,6 +74,10 @@ O exame de recurso será no dia 28 Jan.
 * [T5. Análise Amortizada de Algoritmos](https://www.dropbox.com/scl/fi/qsh8pm4p6jwfs2vug649z/T5.-An-lise-Amortizada-de-Algoritmos.pdf?rlkey=ufnz5djb13jepxn19hugjrh80&dl=0)
 * [ED3. Árvores AVL](https://www.dropbox.com/scl/fi/8ajurvpkso5yg968dyzia/ED3.-rvores-AVL.pdf?rlkey=uqodvka76kvkx3nf1l4gbp3tg&dl=0)
 * [ED4. Tabelas de “hash”](https://www.dropbox.com/scl/fi/rcrbfjvl15pcexiwke80v/ED4.-Tabelas-de-hash.pdf?rlkey=hxxekhsai5z9hom7r1n6cjmh6&dl=0)
+* [G1. Representação de Grafos em Computador](https://www.dropbox.com/scl/fi/3g63i9nq7946bkuoqok2l/G1.-Representa-o-de-Grafos-em-Computador.pdf?rlkey=elppb2lc9wzmi7xcod30813eg&dl=0)
+* [G2. Algoritmos de Travessia de Grafos](https://www.dropbox.com/scl/fi/jmhiar4wgo9aqhglbjuug/G2.-Algoritmos-de-Travessia-de-Grafos.pdf?rlkey=e8hfkjcqbq1oa7g7l7x2n0w6r&dl=0)
+* [G3. Algoritmos sobre Grafos Pesados: Estratégia Greedy](https://www.dropbox.com/scl/fi/wdvqtxo5a9zet21a5d7t9/G3.-Algoritmos-sobre-Grafos-Pesados-Estrat-gia-Greedy.pdf?rlkey=f3qbs0ckmgl8pfrvsg64l7xdy&dl=0)
+* [G4. Algoritmos sobre Grafos Pesados: Programação Dinâmica](https://www.dropbox.com/scl/fi/srj01vj0r8iii93jc843a/G4.-Algoritmos-sobre-Grafos-Pesados-Programa-o-Din-mica.pdf?rlkey=8rm9si26pb712axaqjrq6quhy&dl=0)
 
 ### Animações
 
